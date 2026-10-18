@@ -1,0 +1,54 @@
+{
+	"meta": {
+		"appName": "Studentplat",
+		"homeTitle": "Log in or sign up",
+		"dashboardTitle": "Dashboard"
+	},
+	"lang": {
+		"label": "Language",
+		"it": "Italiano",
+		"en": "English"
+	},
+	"home": {
+		"tagline": "Keep track of exams, study days, grades and averages in one place."
+	},
+	"auth": {
+		"tabs": {
+			"label": "Account",
+			"login": "Log in",
+			"register": "Sign up"
+		},
+		"fields": {
+			"name": "Name",
+			"email": "Email",
+			"password": "Password",
+			"passwordConfirm": "Confirm password"
+		},
+		"hints": {
+			"passwordMin": "At least {min} characters"
+		},
+		"login": {
+			"title": "Log in",
+			"submit": "Log in"
+		},
+		"register": {
+			"title": "Create an account",
+			"submit": "Sign up"
+		},
+		"errors": {
+			"invalidCredentials": "Incorrect email or password.",
+			"nameRequired": "Please enter your name.",
+			"nameTooLong": "Name can't be longer than {max} characters.",
+			"emailInvalid": "Please enter a valid email address.",
+			"emailTaken": "This email is already registered.",
+			"passwordTooShort": "Password must be at least {min} characters long.",
+			"passwordTooLong": "Password can't be longer than {max} characters.",
+			"passwordMismatch": "Passwords do not match.",
+			"generic": "Something went wrong. Please try again."
+		}
+	},
+	"dashboard": {
+		"greeting": "Hi {name}",
+		"logout": "Log out"
+	}
+}

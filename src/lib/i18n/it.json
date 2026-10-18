@@ -1,0 +1,54 @@
+{
+	"meta": {
+		"appName": "Studentplat",
+		"homeTitle": "Accedi o registrati",
+		"dashboardTitle": "Dashboard"
+	},
+	"lang": {
+		"label": "Lingua",
+		"it": "Italiano",
+		"en": "English"
+	},
+	"home": {
+		"tagline": "Tieni traccia di esami, giorni di studio, voti e media in un unico posto."
+	},
+	"auth": {
+		"tabs": {
+			"label": "Accesso",
+			"login": "Accedi",
+			"register": "Registrati"
+		},
+		"fields": {
+			"name": "Nome",
+			"email": "Email",
+			"password": "Password",
+			"passwordConfirm": "Conferma password"
+		},
+		"hints": {
+			"passwordMin": "Almeno {min} caratteri"
+		},
+		"login": {
+			"title": "Accedi",
+			"submit": "Accedi"
+		},
+		"register": {
+			"title": "Crea un account",
+			"submit": "Registrati"
+		},
+		"errors": {
+			"invalidCredentials": "Credenziali non valide.",
+			"nameRequired": "Inserisci il tuo nome.",
+			"nameTooLong": "Il nome può avere al massimo {max} caratteri.",
+			"emailInvalid": "Inserisci un indirizzo email valido.",
+			"emailTaken": "Questa email è già registrata.",
+			"passwordTooShort": "La password deve avere almeno {min} caratteri.",
+			"passwordTooLong": "La password può avere al massimo {max} caratteri.",
+			"passwordMismatch": "Le password non coincidono.",
+			"generic": "Si è verificato un errore. Riprova."
+		}
+	},
+	"dashboard": {
+		"greeting": "Ciao {name}",
+		"logout": "Esci"
+	}
+}
