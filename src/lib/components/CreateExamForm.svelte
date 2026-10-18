@@ -1,6 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { getListFormat, getT } from '#lib/i18n/context.js';
+	import { getT } from '#lib/i18n/context.js';
 	import {
 		EXAM_CFU_MAX,
 		EXAM_CFU_MIN,
@@ -26,7 +26,6 @@
 	let { date, action, catalog, initialName = '', onsuccess, oncancel } = $props();
 
 	const t = getT();
-	const formatAlternatives = getListFormat({ type: 'disjunction' });
 	const cfuRange = { min: EXAM_CFU_MIN, max: EXAM_CFU_MAX };
 
 	// Valore iniziale copiato una volta sola (il testo cercato): poi lo gestisce il form
@@ -113,7 +112,7 @@
 		{#if exact}
 			{t('calendar.create.existsSame', { cfu: exact.cfu })}
 		{:else if otherCfus.length > 0}
-			{t('calendar.create.existsOther', { cfu: formatAlternatives(otherCfus.map(String)) })}
+			{t('calendar.create.existsOther', { cfu: otherCfus.join(', ') })}
 		{/if}
 	</p>
 
