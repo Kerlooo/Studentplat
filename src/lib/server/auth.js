@@ -1,5 +1,6 @@
 import { createHash, randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
+import { redirect } from '@sveltejs/kit';
 import { dev } from '$app/env';
 import { db } from './db.js';
 
@@ -70,7 +71,7 @@ export async function validateSession(token) {
 	const id = hashToken(token);
 	const [rows] = /** @type {[import('mysql2').RowDataPacket[], unknown]} */ (
 		await db.execute(
-			`SELECT s.expires_at, u.id, u.email, u.name
+			`SELECT s.expires_at, u.id, u.email, u.name, u.nickname
 			 FROM sessions s JOIN users u ON u.id = s.user_id
 			 WHERE s.id = ?`,
 			[id]
@@ -92,7 +93,11 @@ export async function validateSession(token) {
 		renewed = true;
 	}
 
-	return { user: { id: row.id, email: row.email, name: row.name }, expiresAt, renewed };
+	return {
+		user: { id: row.id, email: row.email, name: row.name, nickname: row.nickname ?? null },
+		expiresAt,
+		renewed
+	};
 }
 
 /** @param {string} token */
@@ -113,6 +118,18 @@ export function setSessionCookie(cookies, token, expiresAt) {
 		secure: !dev,
 		expires: expiresAt
 	});
+}
+
+/**
+ * Garantisce che la richiesta sia autenticata, altrimenti rimanda alla homepage.
+ * Va chiamata in ogni load e action dell'area riservata: il guard nel layout
+ * non protegge le action né le load delle pagine (eseguite in parallelo).
+ * @param {App.Locals} locals
+ * @returns {App.User}
+ */
+export function requireUser(locals) {
+	if (!locals.user) redirect(303, '/');
+	return locals.user;
 }
 
 /** @param {import('@sveltejs/kit').Cookies} cookies */

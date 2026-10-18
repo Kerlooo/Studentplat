@@ -2,7 +2,8 @@
 	"meta": {
 		"appName": "Studentplat",
 		"homeTitle": "Log in or sign up",
-		"dashboardTitle": "Dashboard"
+		"dashboardTitle": "Dashboard",
+		"profileTitle": "Profile"
 	},
 	"lang": {
 		"label": "Language",
@@ -49,6 +50,44 @@
 	},
 	"dashboard": {
 		"greeting": "Hi {name}",
-		"logout": "Log out"
+		"logout": "Log out",
+		"nav": {
+			"label": "Personal area",
+			"overview": "Overview",
+			"profile": "Profile",
+			"exams": "Exams"
+		},
+		"overview": {
+			"studiesHeading": "Your studies",
+			"emptyProfile": "You haven't told us what you study yet. Add your degree programme and university to your profile.",
+			"completeProfile": "Complete your profile"
+		}
+	},
+	"profile": {
+		"title": "Profile",
+		"intro": "These details appear in your personal area. Only your name is required.",
+		"sections": {
+			"personal": "About you",
+			"studies": "Your studies"
+		},
+		"fields": {
+			"name": "Name",
+			"nickname": "Nickname",
+			"degreeCourse": "Degree programme",
+			"university": "University",
+			"totalCfu": "Total ECTS credits for your degree"
+		},
+		"hints": {
+			"nickname": "If you add one, the dashboard will greet you with it.",
+			"totalCfu": "A whole number between {min} and {max}, e.g. 180 for a bachelor's degree."
+		},
+		"submit": "Save profile",
+		"saved": "Profile saved.",
+		"errors": {
+			"nicknameTooLong": "Nickname can't be longer than {max} characters.",
+			"degreeCourseTooLong": "Degree programme can't be longer than {max} characters.",
+			"universityTooLong": "University name can't be longer than {max} characters.",
+			"totalCfuInvalid": "Please enter a whole number of credits between {min} and {max}."
+		}
 	}
 }

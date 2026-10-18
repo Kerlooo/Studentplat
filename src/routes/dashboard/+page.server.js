@@ -1,19 +1,13 @@
-import { redirect } from '@sveltejs/kit';
-import { SESSION_COOKIE, deleteSessionCookie, invalidateSession } from '#lib/server/auth.js';
+import { requireUser } from '#lib/server/auth.js';
+import { getProfile } from '#lib/server/profile.js';
 
 /** @type {import('./$types').PageServerLoad} */
-export function load({ locals }) {
-	if (!locals.user) redirect(303, '/');
-	return { user: locals.user };
+export async function load({ locals }) {
+	const user = requireUser(locals);
+	const profile = await getProfile(user.id);
+	return {
+		greetingName: user.nickname || user.name,
+		degreeCourse: profile?.degreeCourse ?? null,
+		university: profile?.university ?? null
+	};
 }
-
-/** @type {import('./$types').Actions} */
-export const actions = {
-	logout: async ({ cookies, locals }) => {
-		const token = cookies.get(SESSION_COOKIE);
-		if (token) await invalidateSession(token);
-		deleteSessionCookie(cookies);
-		locals.user = null;
-		redirect(303, '/');
-	}
-};

@@ -1,0 +1,26 @@
+# Studentplat
+
+> Studentplat is a web platform for Italian university students to track their academic progress: study days, upcoming exams, passed exams with grades and credits (CFU), arithmetic and credit-weighted averages, and grade trends.
+
+Important notes:
+
+- All personal data (profile, exams, grades) is private and only visible after login. Agents cannot read user data without the user's own session; there is no public API.
+- The interface is available in Italian (default) and English. The language is stored in the `lang` cookie and changed with a POST to `/lang`.
+- Grades follow the Italian system: 1 to 30, plus "30 e lode" (30 cum laude), stored as 31. A grade below 18 means the exam was not passed.
+- Exams (in development) are a shared catalogue: the first user who creates an exam (name and credits) makes it available as a template to every other user, who adds it to their own transcript.
+
+## Pages
+
+- [Home](/): Log in and sign up.
+- [Dashboard](/dashboard): Overview of the student's progress (login required).
+- [Profile](/dashboard/profile): Nickname, degree programme, university and total credits of the degree (login required).
+
+## Docs
+
+- [README (English)](https://raw.githubusercontent.com/Kerlooo/Studentplat/master/.github/README.en.md): Features, stack, setup, environment variables and project structure.
+- [Database schema](https://raw.githubusercontent.com/Kerlooo/Studentplat/master/db/schema.sql): Tables for users, sessions, the shared exam catalogue and personal transcripts.
+
+## Optional
+
+- [README (Italian)](https://raw.githubusercontent.com/Kerlooo/Studentplat/master/.github/README.md): Italian version of the README.
+- [Source code](https://github.com/Kerlooo/Studentplat): SvelteKit 3 and Svelte 5 repository.
