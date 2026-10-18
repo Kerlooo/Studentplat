@@ -52,7 +52,6 @@
 	}
 
 	.profile-title {
-		font-optical-sizing: auto;
 		font-weight: var(--weight-bold);
 		letter-spacing: -0.01em;
 		font-size: var(--text-2xl);

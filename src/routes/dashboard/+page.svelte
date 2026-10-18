@@ -48,7 +48,6 @@
 	.overview-greeting {
 		max-width: 20ch;
 		font-family: var(--font-display);
-		font-optical-sizing: auto;
 		font-weight: var(--weight-bold);
 		font-size: clamp(var(--text-2xl), 6vw + 0.5rem, var(--text-3xl));
 		line-height: var(--leading-tight);
@@ -61,10 +60,17 @@
 	 * Qui il rigo e' piu' largo del normale e ogni riga di testo occupa
 	 * esattamente un rigo; lo spostamento verticale porta le righe
 	 * appena sotto la linea di base del testo.
+	 *
+	 * Calcolo (Source Serif 4: ascendente 1.036em, discendente 0.335em):
+	 * distanza linea di base -> fondo del rigo = (passo - 1.371 * corpo) / 2 + 0.335 * corpo.
+	 * Mobile, passo 40px e corso a 24px: ~11.5px, quindi -0.5rem lascia ~3.5px.
+	 * Desktop, passo 56px e corso a 36px: ~15.5px, quindi -0.75rem lascia ~3.5px.
+	 * L'ateneo (Atkinson, piu' piccolo) resta qualche px piu' in alto: va bene,
+	 * e' il corso la riga "scritta sul rigo". In rem per seguire la scala del testo.
 	 */
 	.overview-studies {
 		--rule-pitch: 2.5rem;
-		--rule-shift: -6px;
+		--rule-shift: -0.5rem;
 
 		display: flex;
 		flex-direction: column;
@@ -76,7 +82,6 @@
 
 	.overview-degree {
 		font-family: var(--font-display);
-		font-optical-sizing: auto;
 		font-weight: var(--weight-semibold);
 		font-size: var(--text-xl);
 		line-height: var(--rule-pitch);
@@ -117,7 +122,7 @@
 	@media (min-width: 48rem) {
 		.overview-studies {
 			--rule-pitch: 3.5rem;
-			--rule-shift: -12px;
+			--rule-shift: -0.75rem;
 		}
 
 		.overview-degree {

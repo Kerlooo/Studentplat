@@ -33,8 +33,16 @@
 	--color-focus: #1a3daa;
 	--color-shadow: 26 40 90;
 
-	/* Tipografia */
-	--font-display: 'Bodoni Moda', 'Bodoni 72', 'Didot', Georgia, serif;
+	/*
+	 * Tipografia
+	 * Titoli, voti e medie: Source Serif 4, serif da lettura a schermo con
+	 * tratti robusti e cifre ampie. L'asse opsz e' caricato solo fino a 32
+	 * (vedi app.html): anche nei titoli grandi resta il disegno "subhead",
+	 * a contrasto moderato, invece della versione display piu' sottile.
+	 * Testo: Atkinson Hyperlegible Next, grottesco con lettere ben distinte.
+	 */
+	--font-display:
+		'Source Serif 4', 'Source Serif Pro', Charter, 'Bitstream Charter', Georgia, serif;
 	--font-body:
 		'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI',
 		sans-serif;
@@ -49,7 +57,8 @@
 	--text-3xl: 3rem;
 	--text-4xl: 4.5rem;
 
-	--leading-tight: 1.05;
+	/* Source Serif ha ascendenti alte: 1.1 evita collisioni con gli accenti (È, À) */
+	--leading-tight: 1.1;
 	--leading-snug: 1.25;
 	--leading-body: 1.5;
 
@@ -167,8 +176,11 @@ h1,
 h2,
 h3 {
 	font-family: var(--font-display);
+	font-optical-sizing: auto;
 	font-weight: var(--weight-semibold);
 	line-height: var(--leading-snug);
+	/* Nei titoli le cifre proporzionali si leggono meglio; voti e medie restano tabellari */
+	font-variant-numeric: lining-nums proportional-nums;
 	text-wrap: balance;
 }
 

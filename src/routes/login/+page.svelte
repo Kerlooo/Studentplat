@@ -79,11 +79,10 @@
 	/* Il nome come intestazione stampata del libretto */
 	.login-title {
 		font-family: var(--font-display);
-		font-optical-sizing: auto;
-		font-weight: 700;
+		font-weight: var(--weight-bold);
 		font-size: clamp(2.75rem, 10vw + 0.5rem, var(--text-4xl));
 		line-height: var(--leading-tight);
-		letter-spacing: -0.015em;
+		letter-spacing: -0.01em;
 		color: var(--color-ink);
 	}
 

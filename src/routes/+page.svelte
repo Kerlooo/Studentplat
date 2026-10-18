@@ -161,11 +161,10 @@
 	.landing-hero-title {
 		max-width: 15ch;
 		font-family: var(--font-display);
-		font-optical-sizing: auto;
 		font-weight: var(--weight-bold);
 		font-size: clamp(2.25rem, 6vw + 1rem, var(--text-4xl));
 		line-height: var(--leading-tight);
-		letter-spacing: -0.02em;
+		letter-spacing: -0.01em;
 		color: var(--color-text);
 	}
 
@@ -191,6 +190,13 @@
 		max-width: 30rem;
 		padding: var(--line) var(--space-4) var(--line) calc(var(--margin-x) + var(--space-4));
 		line-height: var(--line);
+		/*
+		 * Con riga di 28px le linee di base cadono 6-8px sopra il rigo
+		 * (voti in Source Serif a 21px ~6.5px, testo in Atkinson a 16px ~8px):
+		 * alzare le righe di 4px le porta appena sotto la scrittura.
+		 * In rem, cosi' segue la scala del testo come il passo delle righe.
+		 */
+		background-position: 0 -0.25rem;
 	}
 
 	.landing-sample-table {
@@ -231,6 +237,7 @@
 		font-family: var(--font-display);
 		font-weight: var(--weight-semibold);
 		font-size: var(--text-lg);
+		font-variant-numeric: lining-nums tabular-nums;
 		color: var(--color-ink);
 	}
 
@@ -277,6 +284,7 @@
 		font-family: var(--font-display);
 		font-weight: var(--weight-bold);
 		font-size: var(--text-xl);
+		font-variant-numeric: lining-nums tabular-nums;
 		color: var(--color-ink);
 	}
 
@@ -384,8 +392,9 @@
 		content: counter(step);
 		grid-row: 1 / span 2;
 		font-family: var(--font-display);
-		font-weight: var(--weight-bold);
+		font-weight: var(--weight-semibold);
 		font-size: var(--text-3xl);
+		font-variant-numeric: lining-nums tabular-nums;
 		line-height: 1;
 		color: var(--color-ink);
 		/* Il numero sta sul margine rosso, come la numerazione a bordo pagina */

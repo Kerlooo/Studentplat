@@ -152,7 +152,6 @@
 		padding: 0 0 var(--space-2);
 		border-bottom: 1px solid var(--color-paper-edge);
 		font-family: var(--font-display);
-		font-optical-sizing: auto;
 		font-size: var(--text-lg);
 		font-weight: var(--weight-semibold);
 		line-height: var(--leading-snug);

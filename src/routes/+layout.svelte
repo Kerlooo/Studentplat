@@ -60,10 +60,8 @@
 		align-items: center;
 		min-height: 2.75rem;
 		font-family: var(--font-display);
-		font-optical-sizing: auto;
 		font-weight: var(--weight-bold);
 		font-size: var(--text-xl);
-		letter-spacing: -0.01em;
 		color: var(--color-ink);
 		text-decoration: none;
 	}
