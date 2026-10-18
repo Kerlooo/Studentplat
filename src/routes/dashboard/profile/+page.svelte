@@ -1,7 +1,7 @@
 <script>
+	import { resolve } from '$app/paths';
 	import { getT } from '#lib/i18n/context.js';
 	import ProfileForm from '#lib/components/ProfileForm.svelte';
-	import ExamImportForm from '#lib/components/ExamImportForm.svelte';
 
 	/** @type {import('./$types').PageProps} */
 	let { data, form } = $props();
@@ -38,13 +38,13 @@
 		/>
 	</div>
 
-	<div class="profile-panel profile-import">
-		<ExamImportForm
-			initialText={form && 'importText' in form ? form.importText : ''}
-			errors={form && 'importErrors' in form ? form.importErrors : []}
-			result={form && 'imported' in form ? form.imported : null}
-		/>
-	</div>
+	<section class="profile-import" aria-labelledby="profile-import-title">
+		<h2 class="profile-import-title" id="profile-import-title">{t('import.title')}</h2>
+		<p class="profile-import-text">{t('profile.import.text')}</p>
+		<a class="button button-secondary" href={resolve('/dashboard/profile/import')}>
+			{t('profile.import.open')}
+		</a>
+	</section>
 </section>
 
 <style>
@@ -80,37 +80,34 @@
 		padding: var(--space-5) var(--space-5) var(--space-8) var(--space-8);
 	}
 
-	/*
-	 * Importazione: stesso foglio del profilo con il doppio margine rosso,
-	 * ma senza righe (il codice non sta sulle righe della pagina).
-	 */
+	/* Rimando alla pagina d'importazione: titolo, una riga e il pulsante */
 	.profile-import {
-		--margin-x: var(--space-4);
-		min-width: 0;
-		background-color: var(--color-paper);
-		background-image: linear-gradient(
-			to right,
-			transparent var(--margin-x),
-			var(--color-margin) var(--margin-x),
-			var(--color-margin) calc(var(--margin-x) + 1px),
-			transparent calc(var(--margin-x) + 1px),
-			transparent calc(var(--margin-x) + 4px),
-			var(--color-margin) calc(var(--margin-x) + 4px),
-			var(--color-margin) calc(var(--margin-x) + 5px),
-			transparent calc(var(--margin-x) + 5px)
-		);
-		border: 1px solid var(--color-paper-edge);
-		border-radius: var(--radius-sm);
-		box-shadow: var(--shadow-pages);
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--space-2);
+		max-width: 36rem;
+	}
+
+	.profile-import-title {
+		font-size: var(--text-xl);
+		font-weight: var(--weight-bold);
+		line-height: var(--leading-tight);
+		color: var(--color-text);
+	}
+
+	.profile-import-text {
+		max-width: 60ch;
+		color: var(--color-text-muted);
+	}
+
+	.profile-import .button {
+		margin-top: var(--space-2);
 	}
 
 	@media (min-width: 30rem) {
 		.profile-panel {
 			padding: var(--space-6) var(--space-8) var(--space-10) var(--space-12);
-		}
-
-		.profile-import {
-			--margin-x: var(--space-8);
 		}
 	}
 </style>

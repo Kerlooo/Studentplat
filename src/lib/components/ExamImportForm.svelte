@@ -2,12 +2,13 @@
 	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { getT } from '#lib/i18n/context.js';
-	import { IMPORT_EXAMPLE, IMPORT_MAX_BYTES, IMPORT_MAX_ITEMS } from '#lib/import-rules.js';
+	import { IMPORT_EXAMPLE } from '#lib/import-rules.js';
 	import { EXAM_CFU_MAX, EXAM_CFU_MIN, EXAM_NAME_MAX } from '#lib/exam-rules.js';
 	import { NOTES_MAX, TEACHER_MAX } from '#lib/grade-rules.js';
 
 	/**
-	 * Importazione degli esami sostenuti da un elenco JSON (action `?/import` del profilo).
+	 * Importazione degli esami sostenuti da un elenco JSON (action di default di
+	 * /dashboard/profile/import; titolo e limiti li mostra la pagina).
 	 * In caso di errori non viene salvato nulla: il testo resta nel campo e sotto
 	 * compare l'elenco degli errori per riga (riga 0 = errore sull'intero testo).
 	 *
@@ -20,7 +21,6 @@
 	let { initialText = '', errors = [], result = null } = $props();
 
 	const t = getT();
-	const limits = { items: IMPORT_MAX_ITEMS, size: IMPORT_MAX_BYTES / 1024 };
 	const fieldParams = {
 		nameMax: EXAM_NAME_MAX,
 		cfuMin: EXAM_CFU_MIN,
@@ -67,10 +67,7 @@
 	]);
 </script>
 
-<section class="exam-import" id="exam-import" aria-labelledby="exam-import-title">
-	<h2 class="exam-import-title" id="exam-import-title">{t('import.title')}</h2>
-	<p class="exam-import-intro">{t('import.intro', limits)}</p>
-
+<div class="exam-import">
 	<dl class="exam-import-fields">
 		{#each fields as field (field)}
 			<div class="exam-import-field">
@@ -97,7 +94,6 @@
 	<form
 		class="exam-import-form"
 		method="POST"
-		action="?/import"
 		use:enhance={() => {
 			pending = true;
 			copied = false;
@@ -142,7 +138,7 @@
 			</p>
 		</div>
 	</form>
-</section>
+</div>
 
 <style>
 	/*
@@ -160,8 +156,6 @@
 
 	.exam-import {
 		gap: var(--space-5);
-		/* Arrivando da /dashboard/exams con #exam-import il titolo non resta attaccato al bordo */
-		scroll-margin-top: var(--space-8);
 	}
 
 	.exam-import-form {
@@ -170,18 +164,6 @@
 
 	.exam-import-input {
 		gap: var(--space-1);
-	}
-
-	.exam-import-title {
-		font-size: var(--text-xl);
-		font-weight: var(--weight-bold);
-		line-height: var(--leading-tight);
-		color: var(--color-text);
-	}
-
-	.exam-import-intro {
-		max-width: 60ch;
-		color: var(--color-text-muted);
 	}
 
 	.exam-import-label {

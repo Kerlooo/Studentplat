@@ -7,7 +7,8 @@
 		"dashboardTitle": "Dashboard",
 		"profileTitle": "Profilo",
 		"calendarTitle": "Calendario",
-		"transcriptTitle": "Libretto"
+		"transcriptTitle": "Libretto",
+		"importTitle": "Importa esami"
 	},
 	"lang": {
 		"label": "Lingua",
@@ -182,6 +183,10 @@
 			"degreeCourseTooLong": "Il corso di studi può avere al massimo {max} caratteri.",
 			"universityTooLong": "Il nome dell'università può avere al massimo {max} caratteri.",
 			"totalCfuInvalid": "Inserisci un numero intero di CFU tra {min} e {max}."
+		},
+		"import": {
+			"text": "Hai già sostenuto degli esami? Caricali tutti insieme incollando un elenco JSON.",
+			"open": "Vai all'importazione"
 		}
 	},
 	"modal": {
@@ -390,6 +395,7 @@
 			"passedTwice": "{name} risulta superato anche alla riga {other}",
 			"alreadyPassed": "{name} è già superato nel tuo libretto",
 			"generic": "Non è stato possibile importare. Riprova."
-		}
+		},
+		"back": "Torna al profilo"
 	}
 }

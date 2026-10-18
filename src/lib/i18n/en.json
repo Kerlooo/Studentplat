@@ -7,7 +7,8 @@
 		"dashboardTitle": "Dashboard",
 		"profileTitle": "Profile",
 		"calendarTitle": "Calendar",
-		"transcriptTitle": "Transcript"
+		"transcriptTitle": "Transcript",
+		"importTitle": "Import exams"
 	},
 	"lang": {
 		"label": "Language",
@@ -182,6 +183,10 @@
 			"degreeCourseTooLong": "Degree programme can't be longer than {max} characters.",
 			"universityTooLong": "University name can't be longer than {max} characters.",
 			"totalCfuInvalid": "Please enter a whole number of credits between {min} and {max}."
+		},
+		"import": {
+			"text": "Already taken some exams? Add them all at once by pasting a JSON list.",
+			"open": "Go to import"
 		}
 	},
 	"modal": {
@@ -390,6 +395,7 @@
 			"passedTwice": "{name} is also marked as passed in row {other}",
 			"alreadyPassed": "{name} is already marked as passed in your transcript",
 			"generic": "Couldn't import. Please try again."
-		}
+		},
+		"back": "Back to profile"
 	}
 }
