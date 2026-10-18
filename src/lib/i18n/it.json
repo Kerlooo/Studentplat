@@ -5,7 +5,8 @@
 		"homeDescription": "Studentplat è il libretto online per studenti universitari: registra esami e voti, calcola la media aritmetica e ponderata sui CFU, segui l'andamento e organizza i giorni di studio.",
 		"loginTitle": "Accedi o registrati",
 		"dashboardTitle": "Dashboard",
-		"profileTitle": "Profilo"
+		"profileTitle": "Profilo",
+		"calendarTitle": "Calendario"
 	},
 	"lang": {
 		"label": "Lingua",
@@ -130,7 +131,8 @@
 			"label": "Area riservata",
 			"overview": "Panoramica",
 			"profile": "Profilo",
-			"exams": "Esami"
+			"exams": "Esami",
+			"calendar": "Calendario"
 		},
 		"overview": {
 			"studiesHeading": "Il tuo percorso di studi",
@@ -163,6 +165,70 @@
 			"degreeCourseTooLong": "Il corso di studi può avere al massimo {max} caratteri.",
 			"universityTooLong": "Il nome dell'università può avere al massimo {max} caratteri.",
 			"totalCfuInvalid": "Inserisci un numero intero di CFU tra {min} e {max}."
+		}
+	},
+	"modal": {
+		"close": "Chiudi"
+	},
+	"calendar": {
+		"title": "Calendario",
+		"intro": "Scegli un giorno per fissare l'appello di un esame o per toglierlo.",
+		"today": "oggi",
+		"examsOne": "{count} esame",
+		"examsMany": "{count} esami",
+		"cfuShort": "{cfu} CFU",
+		"nav": {
+			"label": "Mesi",
+			"previous": "Mese precedente",
+			"next": "Mese successivo",
+			"today": "Oggi"
+		},
+		"picker": {
+			"scheduled": "Esami fissati per questo giorno",
+			"noneScheduled": "Nessun esame fissato per questo giorno.",
+			"unschedule": "Togli dal giorno",
+			"unscheduleLabel": "Togli dal giorno {name}",
+			"catalog": "Aggiungi un esame",
+			"catalogHint": "Gli esami del catalogo sono condivisi tra tutti gli studenti. Se un esame è già nel tuo libretto, aggiungerlo qui ne sposta l'appello.",
+			"search": "Cerca nel catalogo",
+			"results": "Esami trovati: {count}",
+			"noResults": "Nessun esame trovato per \"{query}\". Puoi crearlo.",
+			"onlyScheduled": "Gli esami trovati sono già fissati per questo giorno.",
+			"catalogEmpty": "Il catalogo è ancora vuoto. Crea il primo esame.",
+			"inTranscript": "Nel tuo libretto, senza appello",
+			"inTranscriptOn": "Nel tuo libretto, appello: {date}",
+			"add": "Aggiungi",
+			"addLabel": "Aggiungi {name}",
+			"move": "Sposta qui",
+			"moveLabel": "Sposta qui {name}"
+		},
+		"create": {
+			"open": "Crea esame",
+			"name": "Nome dell'esame",
+			"cfu": "CFU",
+			"cfuHint": "Un numero intero tra {min} e {max}.",
+			"existsSame": "Questo esame esiste già con {cfu} CFU: verrà usato quello.",
+			"existsOther": "Esiste già un esame con questo nome da {cfu} CFU. Crealo solo se nel tuo corso vale un numero diverso di CFU.",
+			"submit": "Crea esame",
+			"cancel": "Annulla"
+		},
+		"messages": {
+			"added": "{name} fissato per questo giorno e aggiunto al tuo libretto.",
+			"moved": "Appello di {name} spostato qui (data precedente: {from}).",
+			"movedUndated": "Appello di {name} fissato per questo giorno.",
+			"unchanged": "{name} era già fissato per questo giorno.",
+			"created": "{name} creato nel catalogo e fissato per questo giorno.",
+			"reused": "{name} da {cfu} CFU era già nel catalogo, quindi è stato usato quello.",
+			"removed": "{name} tolto dal giorno. Resta nel tuo libretto."
+		},
+		"errors": {
+			"invalidDate": "La data non è valida.",
+			"examNotFound": "Questo esame non è nel catalogo.",
+			"userExamNotFound": "Questo esame non è nel tuo libretto.",
+			"nameRequired": "Inserisci il nome dell'esame.",
+			"nameTooLong": "Il nome può avere al massimo {max} caratteri.",
+			"cfuInvalid": "Inserisci un numero intero di CFU tra {min} e {max}.",
+			"generic": "Non è stato possibile salvare. Riprova."
 		}
 	}
 }

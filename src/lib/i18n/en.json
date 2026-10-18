@@ -5,7 +5,8 @@
 		"homeDescription": "Studentplat is the online transcript for university students: record your exams and grades, get your arithmetic and credit-weighted averages, follow your grade trend and plan your study days.",
 		"loginTitle": "Log in or sign up",
 		"dashboardTitle": "Dashboard",
-		"profileTitle": "Profile"
+		"profileTitle": "Profile",
+		"calendarTitle": "Calendar"
 	},
 	"lang": {
 		"label": "Language",
@@ -130,7 +131,8 @@
 			"label": "Personal area",
 			"overview": "Overview",
 			"profile": "Profile",
-			"exams": "Exams"
+			"exams": "Exams",
+			"calendar": "Calendar"
 		},
 		"overview": {
 			"studiesHeading": "Your studies",
@@ -163,6 +165,70 @@
 			"degreeCourseTooLong": "Degree programme can't be longer than {max} characters.",
 			"universityTooLong": "University name can't be longer than {max} characters.",
 			"totalCfuInvalid": "Please enter a whole number of credits between {min} and {max}."
+		}
+	},
+	"modal": {
+		"close": "Close"
+	},
+	"calendar": {
+		"title": "Calendar",
+		"intro": "Pick a day to set an exam date or remove one.",
+		"today": "today",
+		"examsOne": "{count} exam",
+		"examsMany": "{count} exams",
+		"cfuShort": "{cfu} ECTS",
+		"nav": {
+			"label": "Months",
+			"previous": "Previous month",
+			"next": "Next month",
+			"today": "Today"
+		},
+		"picker": {
+			"scheduled": "Exams scheduled for this day",
+			"noneScheduled": "No exams scheduled for this day.",
+			"unschedule": "Remove from this day",
+			"unscheduleLabel": "Remove {name} from this day",
+			"catalog": "Add an exam",
+			"catalogHint": "The exam catalogue is shared by all students. If an exam is already in your transcript, adding it here moves its exam date.",
+			"search": "Search the catalogue",
+			"results": "Exams found: {count}",
+			"noResults": "No exams match \"{query}\". You can create it.",
+			"onlyScheduled": "All matching exams are already scheduled for this day.",
+			"catalogEmpty": "The catalogue is still empty. Create the first exam.",
+			"inTranscript": "In your transcript, no exam date yet",
+			"inTranscriptOn": "In your transcript, exam on {date}",
+			"add": "Add",
+			"addLabel": "Add {name}",
+			"move": "Move here",
+			"moveLabel": "Move {name} here"
+		},
+		"create": {
+			"open": "Create exam",
+			"name": "Exam name",
+			"cfu": "Credits",
+			"cfuHint": "A whole number between {min} and {max}.",
+			"existsSame": "This exam already exists with {cfu} credits, so that one will be used.",
+			"existsOther": "An exam with this name already exists with {cfu} credits. Only create a new one if it's worth a different number of credits in your degree.",
+			"submit": "Create exam",
+			"cancel": "Cancel"
+		},
+		"messages": {
+			"added": "{name} scheduled for this day and added to your transcript.",
+			"moved": "{name} moved here from {from}.",
+			"movedUndated": "{name} scheduled for this day.",
+			"unchanged": "{name} was already scheduled for this day.",
+			"created": "{name} added to the catalogue and scheduled for this day.",
+			"reused": "{name} ({cfu} credits) was already in the catalogue, so that one was used.",
+			"removed": "{name} removed from this day. It's still in your transcript."
+		},
+		"errors": {
+			"invalidDate": "That date isn't valid.",
+			"examNotFound": "This exam isn't in the catalogue.",
+			"userExamNotFound": "This exam isn't in your transcript.",
+			"nameRequired": "Please enter the exam name.",
+			"nameTooLong": "Name can't be longer than {max} characters.",
+			"cfuInvalid": "Please enter a whole number of credits between {min} and {max}.",
+			"generic": "Couldn't save. Please try again."
 		}
 	}
 }

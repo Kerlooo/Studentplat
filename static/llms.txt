@@ -14,6 +14,7 @@ Important notes:
 - [Home](/): Public presentation of Studentplat and its features (logged-in users are redirected to the dashboard).
 - [Login](/login): Log in and sign up (`/login?tab=register` opens the sign-up form).
 - [Dashboard](/dashboard): Overview of the student's progress (login required).
+- [Calendar](/dashboard/calendar): Monthly calendar of the student's exam sessions (`?month=YYYY-MM`, default current month). Selecting a day lets the student schedule an exam from the shared catalogue, move an exam already in their transcript to that day, remove it from the day, or create a new catalogue exam (login required).
 - [Profile](/dashboard/profile): Nickname, degree programme, university and total credits of the degree (login required).
 
 ## Docs

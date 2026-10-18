@@ -39,3 +39,30 @@ export function getNumberFormat(options) {
 	const getLang = getContext(KEY);
 	return (n) => new Intl.NumberFormat(getLang(), options).format(n);
 }
+
+/**
+ * Restituisce una funzione che formatta le date secondo la lingua corrente
+ * (nomi di mesi e giorni compresi). Il fuso e' UTC: le date di calendario
+ * vanno costruite con `Date.UTC` (vedi `#lib/calendar.js`).
+ * Va chiamata durante l'inizializzazione del componente.
+ * @param {Intl.DateTimeFormatOptions} options
+ * @returns {(date: Date) => string}
+ */
+export function getDateFormat(options) {
+	/** @type {() => import('./index.js').Lang} */
+	const getLang = getContext(KEY);
+	return (date) => new Intl.DateTimeFormat(getLang(), { timeZone: 'UTC', ...options }).format(date);
+}
+
+/**
+ * Restituisce una funzione che unisce un elenco secondo la lingua corrente
+ * (es. "6, 9 o 12" in italiano, "6, 9, or 12" in inglese con `type: 'disjunction'`).
+ * Va chiamata durante l'inizializzazione del componente.
+ * @param {Intl.ListFormatOptions} [options]
+ * @returns {(items: string[]) => string}
+ */
+export function getListFormat(options) {
+	/** @type {() => import('./index.js').Lang} */
+	const getLang = getContext(KEY);
+	return (items) => new Intl.ListFormat(getLang(), options).format(items);
+}
