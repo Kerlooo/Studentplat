@@ -14,7 +14,12 @@
 	},
 	"site": {
 		"home": "Studentplat, go to the home page",
-		"login": "Log in"
+		"login": "Log in",
+		"footer": {
+			"text": "Studentplat, the online transcript for university students.",
+			"credits": "Made by {name}, Computer Science and Technology student",
+			"github": "Source code on GitHub"
+		}
 	},
 	"landing": {
 		"hero": {
@@ -80,11 +85,6 @@
 			"text": "Signing up is free, and only you can see your grades.",
 			"register": "Sign up",
 			"login": "Log in"
-		},
-		"footer": {
-			"text": "Studentplat, the online transcript for university students.",
-			"credits": "Made by {name}, Computer Science and Technology student",
-			"github": "Source code on GitHub"
 		}
 	},
 	"auth": {

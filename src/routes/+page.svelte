@@ -1,6 +1,7 @@
 <script>
 	import { resolve } from '$app/paths';
 	import { getNumberFormat, getT } from '#lib/i18n/context.js';
+	import SiteFooter from '#lib/components/SiteFooter.svelte';
 
 	const t = getT();
 
@@ -121,16 +122,7 @@
 		</div>
 	</section>
 
-	<footer class="landing-footer">
-		<p class="landing-footer-text">{t('landing.footer.text')}</p>
-		<p class="landing-footer-text">
-			{t('landing.footer.credits', { name: 'Carlo' })}
-			<span aria-hidden="true">&middot;</span>
-			<a class="landing-footer-link" href="https://github.com/Kerlooo/Studentplat" rel="external"
-				>{t('landing.footer.github')}</a
-			>
-		</p>
-	</footer>
+	<SiteFooter />
 </div>
 
 <style>
@@ -479,26 +471,9 @@
 
 	/* ---------- Footer ---------- */
 
-	.landing-footer {
+	/* Il footer chiude la vetrina: recupera parte del gap tra le sezioni */
+	.landing > :global(.site-footer) {
 		margin-top: calc(var(--space-8) * -1);
-		padding-top: var(--space-6);
-		border-top: 1px solid var(--color-paper-edge);
-	}
-
-	.landing-footer-text {
-		font-size: var(--text-sm);
-		color: var(--color-text-muted);
-	}
-
-	.landing-footer-link {
-		color: inherit;
-		text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
-		text-underline-offset: 0.2em;
-	}
-
-	.landing-footer-link:hover {
-		color: var(--color-ink);
-		text-decoration-color: currentColor;
 	}
 
 	/* ---------- Schermi piu' larghi ---------- */
@@ -548,7 +523,7 @@
 			gap: var(--space-10);
 		}
 
-		.landing-footer {
+		.landing > :global(.site-footer) {
 			margin-top: calc(var(--space-16) * -1);
 		}
 	}

@@ -14,7 +14,12 @@
 	},
 	"site": {
 		"home": "Studentplat, vai alla pagina iniziale",
-		"login": "Accedi"
+		"login": "Accedi",
+		"footer": {
+			"text": "Studentplat, il libretto online per studenti universitari.",
+			"credits": "Realizzato da {name}, studente di Scienze e Tecnologie Informatiche",
+			"github": "Codice su GitHub"
+		}
 	},
 	"landing": {
 		"hero": {
@@ -80,11 +85,6 @@
 			"text": "La registrazione è gratuita e i tuoi voti li vedi solo tu.",
 			"register": "Registrati",
 			"login": "Accedi"
-		},
-		"footer": {
-			"text": "Studentplat, il libretto online per studenti universitari.",
-			"credits": "Realizzato da {name}, studente di Scienze e Tecnologie Informatiche",
-			"github": "Codice su GitHub"
 		}
 	},
 	"auth": {
