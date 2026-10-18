@@ -1,7 +1,9 @@
 {
 	"meta": {
 		"appName": "Studentplat",
-		"homeTitle": "Log in or sign up",
+		"homeTitle": "Transcript, averages and calendar for university students",
+		"homeDescription": "Studentplat is the online transcript for university students: record your exams and grades, get your arithmetic and credit-weighted averages, follow your grade trend and plan your study days.",
+		"loginTitle": "Log in or sign up",
 		"dashboardTitle": "Dashboard",
 		"profileTitle": "Profile"
 	},
@@ -10,10 +12,81 @@
 		"it": "Italiano",
 		"en": "English"
 	},
-	"home": {
-		"tagline": "Keep track of exams, study days, grades and averages in one place."
+	"site": {
+		"home": "Studentplat, go to the home page",
+		"login": "Log in"
+	},
+	"landing": {
+		"hero": {
+			"title": "Your university transcript, with the maths already done.",
+			"lead": "Record the exams you've passed and the ones still ahead. Studentplat works out your arithmetic and credit-weighted averages and shows you how your grades are trending.",
+			"register": "Sign up",
+			"login": "Log in"
+		},
+		"sample": {
+			"caption": "Sample transcript with three exams",
+			"exam": "Exam",
+			"cfu": "Credits",
+			"grade": "Grade",
+			"exam1": "Mathematical analysis I",
+			"exam2": "Programming",
+			"exam3": "General physics",
+			"lode": "30 cum laude",
+			"lodeShort": "30L",
+			"arithmetic": "Arithmetic average",
+			"weighted": "Weighted average",
+			"note": "In the average, 30 cum laude counts as 31."
+		},
+		"features": {
+			"title": "What you can do",
+			"transcript": {
+				"title": "Exam transcript",
+				"text": "Every exam with its credits and grade, from 18 to 30 cum laude. Exams you haven't taken yet stay on your list until you record them."
+			},
+			"average": {
+				"title": "Arithmetic and weighted average",
+				"text": "Both averages update with every new grade. The weighted average counts each exam by its credits, just as your university does."
+			},
+			"chart": {
+				"title": "Grade trend",
+				"text": "A chart lines up your grades in the order you got them, so you can see whether you're improving."
+			},
+			"calendar": {
+				"title": "Study and exam calendar",
+				"text": "Mark your exam session dates and the days you set aside for studying, and see what's coming up over the next few weeks."
+			},
+			"catalog": {
+				"title": "Shared exam catalogue",
+				"text": "When a student creates an exam, its name and credits become available to everyone: add it to your transcript without typing it all again."
+			}
+		},
+		"steps": {
+			"title": "How it works",
+			"account": {
+				"title": "Create your account",
+				"text": "All it takes is a name, an email and a password."
+			},
+			"profile": {
+				"title": "Add your degree",
+				"text": "Degree programme, university and total credits, so you know how far you are from graduating."
+			},
+			"exams": {
+				"title": "Add exams and grades",
+				"text": "Pick exams from the catalogue or create new ones, then record your grade once you've taken them."
+			}
+		},
+		"cta": {
+			"title": "Start with your next exam",
+			"text": "Signing up is free, and only you can see your grades.",
+			"register": "Sign up",
+			"login": "Log in"
+		},
+		"footer": {
+			"text": "Studentplat, the online transcript for university students."
+		}
 	},
 	"auth": {
+		"tagline": "Keep track of exams, study days, grades and averages in one place.",
 		"tabs": {
 			"label": "Account",
 			"login": "Log in",

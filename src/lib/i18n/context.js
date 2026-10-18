@@ -26,3 +26,16 @@ export function getT() {
 	const getLang = getContext(KEY);
 	return (key, params) => translate(getLang(), key, params);
 }
+
+/**
+ * Restituisce una funzione che formatta i numeri secondo la lingua corrente
+ * (es. 27,33 in italiano, 27.33 in inglese).
+ * Va chiamata durante l'inizializzazione del componente.
+ * @param {Intl.NumberFormatOptions} [options]
+ * @returns {(n: number) => string}
+ */
+export function getNumberFormat(options) {
+	/** @type {() => import('./index.js').Lang} */
+	const getLang = getContext(KEY);
+	return (n) => new Intl.NumberFormat(getLang(), options).format(n);
+}

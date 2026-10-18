@@ -121,14 +121,14 @@ export function setSessionCookie(cookies, token, expiresAt) {
 }
 
 /**
- * Garantisce che la richiesta sia autenticata, altrimenti rimanda alla homepage.
+ * Garantisce che la richiesta sia autenticata, altrimenti rimanda alla pagina di accesso.
  * Va chiamata in ogni load e action dell'area riservata: il guard nel layout
  * non protegge le action né le load delle pagine (eseguite in parallelo).
  * @param {App.Locals} locals
  * @returns {App.User}
  */
 export function requireUser(locals) {
-	if (!locals.user) redirect(303, '/');
+	if (!locals.user) redirect(303, '/login');
 	return locals.user;
 }
 

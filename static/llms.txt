@@ -11,7 +11,8 @@ Important notes:
 
 ## Pages
 
-- [Home](/): Log in and sign up.
+- [Home](/): Public presentation of Studentplat and its features (logged-in users are redirected to the dashboard).
+- [Login](/login): Log in and sign up (`/login?tab=register` opens the sign-up form).
 - [Dashboard](/dashboard): Overview of the student's progress (login required).
 - [Profile](/dashboard/profile): Nickname, degree programme, university and total credits of the degree (login required).
 

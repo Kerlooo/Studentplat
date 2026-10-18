@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import { SESSION_COOKIE, deleteSessionCookie, invalidateSession } from '#lib/server/auth.js';
 
 /**
- * Chiude la sessione corrente e torna alla homepage.
+ * Chiude la sessione corrente e torna alla vetrina pubblica.
  * Form POST classico: la navigazione completa azzera anche lo stato del client.
  * La protezione CSRF di SvelteKit (controllo dell'origine) vale anche qui.
  * @type {import('./$types').RequestHandler}
