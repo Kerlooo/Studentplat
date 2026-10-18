@@ -1,6 +1,9 @@
 import { db } from './db.js';
 import { examSearchKey } from '#lib/exam-rules.js';
 import { PASS_MIN, examStatus, isPassing, passingAttempt } from '#lib/grade-rules.js';
+import { isoToUtcDate } from '#lib/calendar.js';
+
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** @typedef {import('mysql2').RowDataPacket[]} Rows */
 /** @typedef {import('mysql2').ResultSetHeader} Result */
@@ -527,4 +530,66 @@ export async function importAttempts(userId, entries) {
 	} finally {
 		conn.release();
 	}
+}
+
+/**
+ * Prossimo appello del libretto, per la Panoramica.
+ * @typedef {{
+ * 	userExamId: number,
+ * 	name: string,
+ * 	cfu: number,
+ * 	plannedDate: string,
+ * 	daysLeft: number,
+ * }} UpcomingExam
+ */
+
+/**
+ * Esami del libretto dell'utente con appello da oggi in poi e non ancora superati,
+ * in ordine di data e poi di nome.
+ * @param {number} userId
+ * @param {string} today `YYYY-MM-DD`
+ * @param {number} limit
+ * @returns {Promise<UpcomingExam[]>}
+ */
+export async function getUpcomingExams(userId, today, limit) {
+	// LIMIT con execute(): il valore va passato come stringa (prepared statement di mysql2)
+	const [rows] = /** @type {[Rows, unknown]} */ (
+		await db.execute(
+			`SELECT ue.id, e.name, e.cfu, DATE_FORMAT(ue.planned_date, '%Y-%m-%d') AS planned_date
+			 FROM user_exams ue JOIN exams e ON e.id = ue.exam_id
+			 WHERE ue.user_id = ? AND ue.planned_date >= ?
+			   AND NOT EXISTS (SELECT 1 FROM exam_attempts a
+			                   WHERE a.user_exam_id = ue.id AND a.grade >= ? AND a.rejected = 0)
+			 ORDER BY ue.planned_date, e.name, e.cfu
+			 LIMIT ?`,
+			[userId, today, PASS_MIN, String(Math.max(0, Math.trunc(limit)))]
+		)
+	);
+	const start = isoToUtcDate(today).getTime();
+	return rows.map((row) => ({
+		userExamId: row.id,
+		name: row.name,
+		cfu: row.cfu,
+		plannedDate: row.planned_date,
+		daysLeft: Math.round((isoToUtcDate(row.planned_date).getTime() - start) / DAY_MS)
+	}));
+}
+
+/**
+ * Somma dei CFU degli esami superati dall'utente.
+ * @param {number} userId
+ * @returns {Promise<number>}
+ */
+export async function getEarnedCfu(userId) {
+	const [rows] = /** @type {[Rows, unknown]} */ (
+		await db.execute(
+			`SELECT COALESCE(SUM(e.cfu), 0) AS cfu
+			 FROM user_exams ue JOIN exams e ON e.id = ue.exam_id
+			 WHERE ue.user_id = ?
+			   AND EXISTS (SELECT 1 FROM exam_attempts a
+			               WHERE a.user_exam_id = ue.id AND a.grade >= ? AND a.rejected = 0)`,
+			[userId, PASS_MIN]
+		)
+	);
+	return Number(rows[0]?.cfu ?? 0);
 }

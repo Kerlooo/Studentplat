@@ -14,7 +14,7 @@ Important notes:
 
 - [Home](/): Public presentation of Studentplat and its features (logged-in users are redirected to the dashboard).
 - [Login](/login): Log in and sign up (`/login?tab=register` opens the sign-up form).
-- [Dashboard](/dashboard): Overview of the student's progress (login required).
+- [Dashboard](/dashboard): Overview of the student's progress: degree programme and university, the next three planned exam sessions not yet passed (date, credits and days left, each linking to the calendar month), and credits earned out of the degree's total with a progress bar (login required).
 - [Transcript](/dashboard/exams): The student's transcript ("Libretto"): every exam with credits, status (to take, passed with grade and date, not passed), planned exam session, lecturer and number of attempts. Passed exams come first, in date order. Each exam expands to edit the lecturer, see and delete attempts, and open the calendar on the exam's month (login required).
 - [Calendar](/dashboard/calendar): Monthly calendar of the student's exam sessions and results (`?month=YYYY-MM`, default current month). Selecting a day lets the student schedule an exam from the shared catalogue, move an exam already in their transcript to that day, remove it from the day, create a new catalogue exam, or record the result of an exam on that day (grade 1-30 or 30L, withdrawn/absent, declined grade, notes). Days with a result show the grade (login required).
 - [Profile](/dashboard/profile): Nickname, degree programme, university and total credits of the degree. Also imports past exams from a JSON list (login required, see below).

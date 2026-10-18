@@ -138,7 +138,23 @@
 		"overview": {
 			"studiesHeading": "Il tuo percorso di studi",
 			"emptyProfile": "Non hai ancora indicato cosa studi. Aggiungi corso di studi e università al tuo profilo.",
-			"completeProfile": "Completa il profilo"
+			"completeProfile": "Completa il profilo",
+			"upcoming": {
+				"heading": "Prossimi esami",
+				"today": "Oggi",
+				"tomorrow": "Domani",
+				"inDays": "Tra {count} giorni",
+				"empty": "Non hai appelli in programma. Fissa la data del prossimo esame nel calendario.",
+				"plan": "Fissa un appello"
+			},
+			"cfu": {
+				"heading": "CFU",
+				"progress": "{earned} su {total} CFU",
+				"percent": "{percent} del corso completato",
+				"earned": "{earned} CFU ottenuti",
+				"noTotal": "Indica nel profilo i CFU totali del corso per vedere quanto ti manca alla laurea.",
+				"setTotal": "Imposta i CFU totali"
+			}
 		}
 	},
 	"profile": {

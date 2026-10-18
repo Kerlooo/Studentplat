@@ -138,7 +138,23 @@
 		"overview": {
 			"studiesHeading": "Your studies",
 			"emptyProfile": "You haven't told us what you study yet. Add your degree programme and university to your profile.",
-			"completeProfile": "Complete your profile"
+			"completeProfile": "Complete your profile",
+			"upcoming": {
+				"heading": "Upcoming exams",
+				"today": "Today",
+				"tomorrow": "Tomorrow",
+				"inDays": "In {count} days",
+				"empty": "You have no exam sessions planned. Set the date of your next exam in the calendar.",
+				"plan": "Schedule an exam"
+			},
+			"cfu": {
+				"heading": "Credits (CFU)",
+				"progress": "{earned} of {total} CFU",
+				"percent": "{percent} of your degree completed",
+				"earned": "{earned} CFU earned",
+				"noTotal": "Add your degree's total credits to your profile to see how far you are from graduating.",
+				"setTotal": "Set total credits"
+			}
 		}
 	},
 	"profile": {

@@ -1,6 +1,8 @@
 <script>
 	import { resolve } from '$app/paths';
 	import { getT } from '#lib/i18n/context.js';
+	import CfuProgress from '#lib/components/CfuProgress.svelte';
+	import UpcomingExams from '#lib/components/UpcomingExams.svelte';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
@@ -36,6 +38,11 @@
 			</a>
 		</div>
 	{/if}
+
+	<div class="overview-sections">
+		<UpcomingExams exams={data.upcoming} />
+		<CfuProgress earned={data.earnedCfu} total={data.totalCfu} />
+	</div>
 </section>
 
 <style>
@@ -104,6 +111,13 @@
 		padding: var(--space-5) var(--space-5) var(--space-6) var(--space-8);
 	}
 
+	.overview-sections {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--space-6);
+		align-items: start;
+	}
+
 	.overview-empty-text {
 		max-width: 60ch;
 		font-size: var(--text-md);
@@ -120,6 +134,10 @@
 	}
 
 	@media (min-width: 48rem) {
+		.overview-sections {
+			grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+		}
+
 		.overview-studies {
 			--rule-pitch: 3.5rem;
 			--rule-shift: -0.75rem;
