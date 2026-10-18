@@ -1,34 +1,18 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { requireUser } from '#lib/server/auth.js';
 import {
+	addAttempt,
 	createExam,
+	getAttemptsForUser,
 	getCatalogForUser,
 	getExam,
 	scheduleExam,
 	unscheduleExam
 } from '#lib/server/exams.js';
-import { formatDate, formatMonth, isIsoDate, parseMonth } from '#lib/calendar.js';
+import { parseId, str, today } from '#lib/server/form.js';
+import { formatMonth, isIsoDate, parseMonth } from '#lib/calendar.js';
 import { EXAM_CFU_MAX, EXAM_CFU_MIN, EXAM_NAME_MAX, normalizeExamName } from '#lib/exam-rules.js';
-
-/** @param {FormDataEntryValue | null} value */
-const str = (value) => (typeof value === 'string' ? value.trim() : '');
-
-/**
- * Id numerico positivo, altrimenti null.
- * @param {FormDataEntryValue | null} value
- */
-function parseId(value) {
-	const text = str(value);
-	if (!/^\d{1,10}$/.test(text)) return null;
-	const id = Number(text);
-	return id > 0 && id <= 4294967295 ? id : null;
-}
-
-/** Data di oggi secondo l'orologio del server. */
-function today() {
-	const now = new Date();
-	return formatDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
-}
+import { NOTES_MAX, isSufficient, parseGradeField } from '#lib/grade-rules.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, url }) {
@@ -40,23 +24,31 @@ export async function load({ locals, url }) {
 	// Mese non valido: si torna al mese corrente invece di mostrare un errore
 	if (!month) redirect(303, url.pathname);
 
+	const attempts = await getAttemptsForUser(user.id);
 	return {
 		month: formatMonth(month),
 		today: todayIso,
-		catalog: await getCatalogForUser(user.id)
+		catalog: await getCatalogForUser(user.id, attempts),
+		attempts
 	};
 }
 
 /**
  * Fissa l'esame nel giorno e prepara il messaggio di esito.
+ * Restituisce null se l'esame e' gia' superato (non si fissa piu').
  * @param {number} userId
  * @param {{ id: number, name: string, cfu: number }} exam
  * @param {string} date
  */
 async function schedule(userId, exam, date) {
 	const { status, previousDate } = await scheduleExam(userId, exam.id, date);
+	if (status === 'passed') return null;
 	return { status, previousDate, exam: { id: exam.id, name: exam.name, cfu: exam.cfu }, date };
 }
+
+/** @param {{ name: string }} exam */
+const alreadyPassed = (exam) =>
+	fail(409, { error: 'calendar.errors.alreadyPassed', params: { name: exam.name } });
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -72,7 +64,9 @@ export const actions = {
 		try {
 			const exam = await getExam(examId);
 			if (!exam) return fail(404, { error: 'calendar.errors.examNotFound' });
-			return { action: 'add', ...(await schedule(user.id, exam, date)) };
+			const scheduled = await schedule(user.id, exam, date);
+			if (!scheduled) return alreadyPassed(exam);
+			return { action: 'add', ...scheduled };
 		} catch (err) {
 			console.error(err);
 			return fail(500, { error: 'calendar.errors.generic' });
@@ -100,11 +94,9 @@ export const actions = {
 
 		try {
 			const exam = await createExam(user.id, values.name, cfu);
-			return {
-				action: 'create',
-				reused: exam.reused,
-				...(await schedule(user.id, exam, date))
-			};
+			const scheduled = await schedule(user.id, exam, date);
+			if (!scheduled) return alreadyPassed(exam);
+			return { action: 'create', reused: exam.reused, ...scheduled };
 		} catch (err) {
 			console.error(err);
 			return fail(500, { error: 'calendar.errors.generic', values });
@@ -124,6 +116,61 @@ export const actions = {
 		} catch (err) {
 			console.error(err);
 			return fail(500, { error: 'calendar.errors.generic' });
+		}
+	},
+
+	attempt: async ({ request, locals }) => {
+		const user = requireUser(locals);
+		const data = await request.formData();
+		const date = str(data.get('date'));
+		const userExamId = parseId(data.get('userExamId'));
+		const values = {
+			grade: str(data.get('grade')),
+			rejected: data.get('rejected') === 'on',
+			notes: str(data.get('notes'))
+		};
+
+		if (!isIsoDate(date)) return fail(400, { error: 'calendar.errors.invalidDate' });
+		if (date > today()) return fail(400, { error: 'calendar.errors.futureAttempt' });
+		if (userExamId === null) return fail(400, { error: 'calendar.errors.userExamNotFound' });
+
+		/** @type {Record<string, string>} */
+		const errors = {};
+		const grade = parseGradeField(values.grade);
+		if (grade === undefined) errors.grade = 'calendar.errors.gradeInvalid';
+		else if (values.rejected && !isSufficient(grade))
+			errors.rejected = 'calendar.errors.rejectedInsufficient';
+		if (values.notes.length > NOTES_MAX) errors.notes = 'calendar.errors.notesTooLong';
+		if (grade === undefined || Object.keys(errors).length > 0)
+			return fail(400, { errors, values, userExamId });
+
+		try {
+			const result = await addAttempt(user.id, userExamId, {
+				date,
+				grade,
+				rejected: values.rejected,
+				notes: values.notes || null
+			});
+			if (result.status === 'notFound')
+				return fail(404, { error: 'calendar.errors.userExamNotFound', userExamId });
+			if (result.status === 'alreadyPassed')
+				return fail(409, {
+					error: 'calendar.errors.attemptAlreadyPassed',
+					params: { name: result.name },
+					values,
+					userExamId
+				});
+			return {
+				action: 'attempt',
+				exam: { name: result.name, cfu: result.cfu },
+				userExamId,
+				date,
+				grade,
+				rejected: values.rejected
+			};
+		} catch (err) {
+			console.error(err);
+			return fail(500, { error: 'calendar.errors.generic', values, userExamId });
 		}
 	}
 };

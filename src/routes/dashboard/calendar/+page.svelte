@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { getDateFormat, getT } from '#lib/i18n/context.js';
 	import { formatMonth, parseMonth, shiftMonth } from '#lib/calendar.js';
+	import { isPassing } from '#lib/grade-rules.js';
 	import CalendarMonth from '#lib/components/CalendarMonth.svelte';
 	import ExamPicker from '#lib/components/ExamPicker.svelte';
 	import Modal from '#lib/components/Modal.svelte';
@@ -21,13 +22,30 @@
 	/** @param {number} delta */
 	const monthHref = (delta) => `${calendarPath}?month=${formatMonth(shiftMonth(month, delta))}`;
 
-	// Esami dell'utente fissati nel mese mostrato, per giorno
+	/**
+	 * Esami del mese mostrato, per giorno: quelli fissati e quelli con un esito registrato.
+	 * L'esito del giorno e' il tentativo superato, se c'e', altrimenti l'ultimo registrato.
+	 */
 	let examsByDate = $derived.by(() => {
-		/** @type {Record<string, { id: number, name: string, cfu: number }[]>} */
+		/** @type {Record<string, import('#lib/components/CalendarMonth.svelte').CalendarExam[]>} */
 		const map = {};
+		const byId = new Map(data.catalog.map((exam) => [exam.id, exam]));
+
 		for (const exam of data.catalog) {
 			if (!exam.plannedDate?.startsWith(data.month)) continue;
-			(map[exam.plannedDate] ??= []).push(exam);
+			(map[exam.plannedDate] ??= []).push({ ...exam, outcome: null });
+		}
+		for (const attempt of data.attempts) {
+			if (!attempt.date.startsWith(data.month)) continue;
+			const day = (map[attempt.date] ??= []);
+			let entry = day.find((exam) => exam.id === attempt.examId);
+			if (!entry) {
+				const exam = byId.get(attempt.examId);
+				if (!exam) continue;
+				entry = { ...exam, outcome: null };
+				day.push(entry);
+			}
+			if (!entry.outcome || !isPassing(entry.outcome)) entry.outcome = attempt;
 		}
 		return map;
 	});
@@ -85,8 +103,10 @@
 	{#if selectedDate}
 		<ExamPicker
 			date={selectedDate}
+			today={data.today}
 			month={data.month}
 			catalog={data.catalog}
+			attempts={data.attempts}
 			headingId="day-dialog-title"
 		/>
 	{/if}

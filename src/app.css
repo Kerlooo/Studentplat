@@ -28,6 +28,7 @@
 	--color-on-highlight: #1b2233;
 	--color-danger: #b42318;
 	--color-danger-soft: #fdecea;
+	--color-on-danger: #ffffff;
 	--color-field: #ffffff;
 	--color-field-border: #6a7690;
 	--color-focus: #1a3daa;
@@ -46,6 +47,9 @@
 	--font-body:
 		'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI',
 		sans-serif;
+	/* Solo per il codice vero (esempio JSON e campo d'importazione), mai per le etichette */
+	--font-mono:
+		ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
 	/* Scala classica (Bringhurst): 14 16 18 21 24 36 48 72 */
 	--text-sm: 0.875rem;
@@ -102,6 +106,7 @@
 	/* Movimento */
 	--ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
 	--duration-fast: 120ms;
+	--duration-turn: 200ms;
 	--duration-mark: 420ms;
 }
 
@@ -123,6 +128,7 @@
 		--color-on-highlight: #1b2233;
 		--color-danger: #ffa395;
 		--color-danger-soft: #3a2232;
+		--color-on-danger: #1b2233;
 		--color-field: #131c36;
 		--color-field-border: #7c89a8;
 		--color-focus: #c2d2ff;

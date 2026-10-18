@@ -35,6 +35,8 @@
 	let pending = $state(false);
 	/** @type {Record<string, string>} */
 	let errors = $state({});
+	/** @type {import('#lib/i18n/index.js').TranslateParams | undefined} */
+	let errorParams = $state();
 
 	// Esami del catalogo con lo stesso nome (maiuscole, accenti e spazi non contano)
 	let sameName = $derived.by(() => {
@@ -59,10 +61,12 @@
 				errors = {};
 				onsuccess(result.data);
 			} else if (result.type === 'failure') {
-				const data = /** @type {{ errors?: Record<string, string>, error?: string }} */ (
-					result.data ?? {}
-				);
+				const data =
+					/** @type {{ errors?: Record<string, string>, error?: string, params?: import('#lib/i18n/index.js').TranslateParams }} */ (
+						result.data ?? {}
+					);
 				errors = data.errors ?? { general: data.error ?? 'calendar.errors.generic' };
+				errorParams = data.params;
 			} else if (result.type === 'error') {
 				errors = { general: 'calendar.errors.generic' };
 			}
@@ -72,7 +76,7 @@
 	<input type="hidden" name="date" value={date} />
 
 	{#if errors.general}
-		<p class="form-error" role="alert">{t(errors.general)}</p>
+		<p class="form-error" role="alert">{t(errors.general, errorParams)}</p>
 	{/if}
 
 	<FormField

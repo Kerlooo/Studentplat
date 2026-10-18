@@ -68,3 +68,7 @@ CREATE TABLE IF NOT EXISTS exam_attempts (
 	CONSTRAINT fk_attempts_user_exam FOREIGN KEY (user_exam_id) REFERENCES user_exams(id) ON DELETE CASCADE,
 	INDEX idx_attempts_user_exam (user_exam_id, attempt_date)
 ) ENGINE=InnoDB;
+
+-- Informazioni personali facoltative sull'esame del libretto
+ALTER TABLE user_exams
+	ADD COLUMN IF NOT EXISTS teacher VARCHAR(150) NULL AFTER planned_date;

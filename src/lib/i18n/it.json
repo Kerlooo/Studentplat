@@ -6,7 +6,8 @@
 		"loginTitle": "Accedi o registrati",
 		"dashboardTitle": "Dashboard",
 		"profileTitle": "Profilo",
-		"calendarTitle": "Calendario"
+		"calendarTitle": "Calendario",
+		"transcriptTitle": "Libretto"
 	},
 	"lang": {
 		"label": "Lingua",
@@ -131,7 +132,7 @@
 			"label": "Area riservata",
 			"overview": "Panoramica",
 			"profile": "Profilo",
-			"exams": "Esami",
+			"exams": "Libretto",
 			"calendar": "Calendario"
 		},
 		"overview": {
@@ -172,7 +173,7 @@
 	},
 	"calendar": {
 		"title": "Calendario",
-		"intro": "Scegli un giorno per fissare l'appello di un esame o per toglierlo.",
+		"intro": "Scegli un giorno per fissare l'appello di un esame, toglierlo o registrarne l'esito.",
 		"today": "oggi",
 		"examsOne": "{count} esame",
 		"examsMany": "{count} esami",
@@ -184,8 +185,8 @@
 			"today": "Oggi"
 		},
 		"picker": {
-			"scheduled": "Esami fissati per questo giorno",
-			"noneScheduled": "Nessun esame fissato per questo giorno.",
+			"scheduled": "Esami di questo giorno",
+			"noneScheduled": "Nessun esame in questo giorno.",
 			"unschedule": "Togli dal giorno",
 			"unscheduleLabel": "Togli dal giorno {name}",
 			"catalog": "Aggiungi un esame",
@@ -200,7 +201,12 @@
 			"add": "Aggiungi",
 			"addLabel": "Aggiungi {name}",
 			"move": "Sposta qui",
-			"moveLabel": "Sposta qui {name}"
+			"moveLabel": "Sposta qui {name}",
+			"passedOn": "Superato con {grade} in data {date}",
+			"attemptsLabel": "Esiti di {name} in questo giorno",
+			"record": "Registra esito",
+			"recordLabel": "Registra l'esito di {name}",
+			"recordLater": "Potrai registrare l'esito dal giorno dell'appello."
 		},
 		"create": {
 			"open": "Crea esame",
@@ -219,7 +225,13 @@
 			"unchanged": "{name} era già fissato per questo giorno.",
 			"created": "{name} creato nel catalogo e fissato per questo giorno.",
 			"reused": "{name} da {cfu} CFU era già nel catalogo, quindi è stato usato quello.",
-			"removed": "{name} tolto dal giorno. Resta nel tuo libretto."
+			"removed": "{name} tolto dal giorno. Resta nel tuo libretto.",
+			"attempt": {
+				"passed": "{name}: {grade}, esame superato.",
+				"failed": "{name}: {grade}, esame non superato.",
+				"rejected": "{name}: {grade} registrato come voto rifiutato.",
+				"withdrawn": "{name}: registrato come ritirato o assente."
+			}
 		},
 		"errors": {
 			"invalidDate": "La data non è valida.",
@@ -228,7 +240,140 @@
 			"nameRequired": "Inserisci il nome dell'esame.",
 			"nameTooLong": "Il nome può avere al massimo {max} caratteri.",
 			"cfuInvalid": "Inserisci un numero intero di CFU tra {min} e {max}.",
+			"generic": "Non è stato possibile salvare. Riprova.",
+			"alreadyPassed": "{name} è già superato, quindi non si può più fissare.",
+			"attemptAlreadyPassed": "{name} è già superato: non può avere un secondo voto sufficiente accettato.",
+			"futureAttempt": "Non puoi registrare l'esito di un giorno che deve ancora arrivare.",
+			"gradeInvalid": "Scegli un voto oppure ritirato o assente.",
+			"rejectedInsufficient": "Puoi rifiutare solo un voto da {min} in su.",
+			"notesTooLong": "Le note possono avere al massimo {max} caratteri."
+		},
+		"attempt": {
+			"formLabel": "Esito di {name}",
+			"grade": "Voto",
+			"gradePlaceholder": "Scegli il voto",
+			"sufficient": "Sufficienti",
+			"insufficient": "Insufficienti",
+			"absent": "Ritirato o assente",
+			"rejected": "Voto rifiutato",
+			"rejectedHint": "Solo per un voto da {min} in su.",
+			"notes": "Note",
+			"notesHint": "Facoltative, al massimo {max} caratteri.",
+			"submit": "Salva esito",
+			"cancel": "Annulla"
+		}
+	},
+	"grades": {
+		"lode": "30 e lode",
+		"lodeShort": "30L",
+		"withdrawnShort": "Rit.",
+		"outcome": {
+			"passed": "Superato",
+			"failed": "Non superato",
+			"rejected": "Rifiutato",
+			"withdrawn": "Ritirato o assente"
+		},
+		"outcomeLong": {
+			"passed": "{grade}, superato",
+			"failed": "{grade}, non superato",
+			"rejected": "{grade}, rifiutato",
+			"withdrawn": "ritirato o assente"
+		}
+	},
+	"transcript": {
+		"title": "Libretto",
+		"intro": "Gli esami del tuo libretto con voti, tentativi e docenti. Apri un esame per vederne lo storico.",
+		"status": {
+			"passedOn": "Superato in data {date}",
+			"failed": "Non superato",
+			"pending": "Da sostenere"
+		},
+		"planned": "Appello: {date}",
+		"teacherShort": "Docente: {name}",
+		"attemptsNone": "Nessun tentativo",
+		"attemptsOne": "{count} tentativo",
+		"attemptsMany": "{count} tentativi",
+		"teacher": {
+			"label": "Docente",
+			"hint": "Facoltativo. Lascia vuoto per toglierlo.",
+			"submit": "Salva docente",
+			"saved": "Docente salvato."
+		},
+		"attempts": {
+			"title": "Tentativi",
+			"none": "Nessun tentativo registrato. L'esito si registra dal calendario, nel giorno dell'appello.",
+			"delete": "Elimina tentativo",
+			"confirmDelete": "Eliminare il tentativo in data {date}? L'operazione non si può annullare.",
+			"confirm": "Elimina",
+			"cancel": "Annulla"
+		},
+		"calendar": {
+			"show": "Vedi nel calendario",
+			"showPlanned": "Vedi l'appello nel calendario",
+			"plan": "Fissa l'appello nel calendario"
+		},
+		"groups": {
+			"passed": "Superati ({count})",
+			"passedNone": "Nessun esame superato per ora.",
+			"toTake": "Da sostenere ({count})",
+			"toTakeNone": "Hai superato tutti gli esami del libretto."
+		},
+		"empty": {
+			"text": "Il libretto è vuoto. Fissa il primo appello dal calendario oppure importa dal profilo gli esami che hai già sostenuto.",
+			"calendar": "Apri il calendario",
+			"import": "Importa esami sostenuti"
+		},
+		"messages": {
+			"attemptDeleted": "Tentativo eliminato."
+		},
+		"errors": {
+			"examNotFound": "Questo esame non è nel tuo libretto.",
+			"attemptNotFound": "Questo tentativo non esiste o è già stato eliminato.",
+			"teacherTooLong": "Il nome del docente può avere al massimo {max} caratteri.",
 			"generic": "Non è stato possibile salvare. Riprova."
+		}
+	},
+	"import": {
+		"title": "Importa esami sostenuti",
+		"intro": "Incolla un elenco JSON con gli esami che hai già sostenuto, fino a {items} elementi e {size} KB. Se anche un solo elemento contiene un errore non viene salvato nulla.",
+		"fields": {
+			"name": "nome dell'esame, al massimo {nameMax} caratteri",
+			"cfu": "crediti, numero intero da {cfuMin} a {cfuMax}",
+			"date": "data dell'appello nel formato AAAA-MM-GG, non nel futuro",
+			"grade": "voto da 1 a 30, \"30L\" o 31 per il 30 e lode, null se ritirato o assente",
+			"rejected": "facoltativo, true se hai rifiutato un voto sufficiente",
+			"teacher": "facoltativo, docente dell'esame (al massimo {teacherMax} caratteri)",
+			"notes": "facoltative, al massimo {notesMax} caratteri"
+		},
+		"example": "Esempio del formato",
+		"copy": "Copia esempio",
+		"copied": "Esempio copiato.",
+		"label": "Elenco JSON",
+		"submit": "Importa esami",
+		"success": "Tentativi importati: {attempts}. Esami nuovi nel catalogo: {newExams}. Duplicati saltati: {duplicates}.",
+		"errors": {
+			"title": "Nessun esame importato. Correggi questi errori ({count}) e riprova.",
+			"row": "Riga {row}: {message}",
+			"empty": "Incolla l'elenco JSON da importare.",
+			"tooLarge": "Il testo supera {max} KB.",
+			"invalidJson": "Il testo non è JSON valido.",
+			"notArray": "Il JSON deve essere un elenco tra parentesi quadre.",
+			"count": "L'elenco deve avere da 1 a {max} elementi.",
+			"notObject": "l'elemento deve essere un oggetto tra parentesi graffe",
+			"nameRequired": "manca il nome dell'esame",
+			"nameTooLong": "il nome può avere al massimo {max} caratteri",
+			"cfuInvalid": "i CFU devono essere un numero intero tra {min} e {max}",
+			"dateInvalid": "data non valida, usa il formato AAAA-MM-GG",
+			"dateFuture": "la data è nel futuro",
+			"gradeMissing": "manca il voto (usa null per ritirato o assente)",
+			"gradeInvalid": "voto non valido",
+			"rejectedInvalid": "rejected deve essere true o false",
+			"rejectedInsufficient": "si può rifiutare solo un voto da {min} in su",
+			"teacherInvalid": "il docente deve essere un testo di al massimo {max} caratteri",
+			"notesInvalid": "le note devono essere un testo di al massimo {max} caratteri",
+			"passedTwice": "{name} risulta superato anche alla riga {other}",
+			"alreadyPassed": "{name} è già superato nel tuo libretto",
+			"generic": "Non è stato possibile importare. Riprova."
 		}
 	}
 }

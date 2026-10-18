@@ -1,15 +1,31 @@
+<script module>
+	/**
+	 * Esame mostrato in un giorno; `outcome` e' l'esito registrato quel giorno, se c'e'.
+	 * @typedef {{
+	 * 	id: number,
+	 * 	name: string,
+	 * 	cfu: number,
+	 * 	outcome: { grade: number | null, rejected: boolean } | null,
+	 * }} CalendarExam
+	 */
+</script>
+
 <script>
 	import { getDateFormat, getT } from '#lib/i18n/context.js';
 	import { WEEKDAY_SAMPLES, isoToUtcDate, monthWeeks } from '#lib/calendar.js';
+	import { attemptOutcome } from '#lib/grade-rules.js';
+	import GradeBadge from './GradeBadge.svelte';
 
 	/**
 	 * Griglia mensile (tabella, etichettata dal titolo del mese indicato in `labelledby`: righe = settimane da lunedi', colonne = giorni).
 	 * Ogni giorno e' un pulsante che chiama `onselect` con la data ISO.
+	 * Un esame con esito mostra il voto al posto dei CFU e la classe dell'esito
+	 * (`is-passed`, `is-failed`, `is-rejected`, `is-withdrawn`).
 	 *
 	 * @type {{
 	 * 	month: { year: number, month: number },
 	 * 	today: string,
-	 * 	examsByDate: Record<string, { id: number, name: string, cfu: number }[]>,
+	 * 	examsByDate: Record<string, CalendarExam[]>,
 	 * 	labelledby: string,
 	 * 	onselect: (date: string) => void,
 	 * }}
@@ -71,11 +87,24 @@
 								{#if exams.length > 0}
 									<span class="calendar-day-exams">
 										{#each exams as exam (exam.id)}
-											<span class="calendar-day-exam">
+											<span
+												class="calendar-day-exam {exam.outcome
+													? `has-outcome is-${attemptOutcome(exam.outcome)}`
+													: ''}"
+											>
 												<span class="calendar-day-exam-name">{exam.name}</span>
-												<span class="calendar-day-exam-cfu"
-													>{t('calendar.cfuShort', { cfu: exam.cfu })}</span
-												>
+												{#if exam.outcome}
+													<span class="calendar-day-exam-grade">
+														<GradeBadge
+															grade={exam.outcome.grade}
+															rejected={exam.outcome.rejected}
+														/>
+													</span>
+												{:else}
+													<span class="calendar-day-exam-cfu"
+														>{t('calendar.cfuShort', { cfu: exam.cfu })}</span
+													>
+												{/if}
 											</span>
 										{/each}
 									</span>
@@ -229,8 +258,36 @@
 		background: var(--color-ink);
 	}
 
+	/*
+	 * Esiti sui punti: forme diverse, non solo colori (come in GradeBadge).
+	 * Fissato: punto pieno; superato: quadratino pieno; non superato: cerchio rosso vuoto;
+	 * rifiutato: quadratino vuoto; ritirato o assente: trattino.
+	 */
+	.calendar-day-exam.is-passed {
+		border-radius: var(--radius-xs);
+	}
+
+	.calendar-day-exam.is-failed {
+		border: 2px solid var(--color-danger);
+		background: transparent;
+	}
+
+	.calendar-day-exam.is-rejected {
+		border: 2px solid var(--color-text-muted);
+		border-radius: var(--radius-xs);
+		background: transparent;
+	}
+
+	.calendar-day-exam.is-withdrawn {
+		align-self: center;
+		height: 2px;
+		border-radius: 0;
+		background: var(--color-text-muted);
+	}
+
 	.calendar-day-exam-name,
-	.calendar-day-exam-cfu {
+	.calendar-day-exam-cfu,
+	.calendar-day-exam-grade {
 		display: none;
 	}
 
@@ -279,12 +336,46 @@
 			white-space: nowrap;
 		}
 
-		.calendar-day-exam-cfu {
+		.calendar-day-exam-cfu,
+		.calendar-day-exam-grade {
 			display: block;
 			font-family: var(--font-display);
 			font-variant-numeric: lining-nums tabular-nums;
 			color: var(--color-text-muted);
 			white-space: nowrap;
+		}
+
+		/*
+		 * Etichette con esito: il voto (GradeBadge) prende il posto dei CFU
+		 * e il filetto a sinistra cambia tratto oltre che colore.
+		 */
+		.calendar-day-exam.has-outcome {
+			align-items: center;
+		}
+
+		.calendar-day-exam.is-passed {
+			border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+		}
+
+		.calendar-day-exam.is-failed {
+			border: 0;
+			border-left: 3px solid var(--color-danger);
+			background: var(--color-danger-soft);
+		}
+
+		.calendar-day-exam.is-rejected {
+			border: 0;
+			border-left: 3px dashed var(--color-text-muted);
+			border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+			background: color-mix(in srgb, var(--color-rule) 70%, transparent);
+		}
+
+		.calendar-day-exam.is-withdrawn {
+			align-self: stretch;
+			height: auto;
+			border-left: 3px dotted var(--color-text-muted);
+			border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+			background: color-mix(in srgb, var(--color-rule) 70%, transparent);
 		}
 	}
 </style>

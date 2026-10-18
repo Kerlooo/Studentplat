@@ -6,7 +6,8 @@
 		"loginTitle": "Log in or sign up",
 		"dashboardTitle": "Dashboard",
 		"profileTitle": "Profile",
-		"calendarTitle": "Calendar"
+		"calendarTitle": "Calendar",
+		"transcriptTitle": "Transcript"
 	},
 	"lang": {
 		"label": "Language",
@@ -59,7 +60,7 @@
 			},
 			"calendar": {
 				"title": "Study and exam calendar",
-				"text": "Mark your exam session dates and the days you set aside for studying, and see what's coming up over the next few weeks."
+				"text": "Mark your exam dates and the days you set aside for studying, and see what's coming up over the next few weeks."
 			},
 			"catalog": {
 				"title": "Shared exam catalogue",
@@ -131,7 +132,7 @@
 			"label": "Personal area",
 			"overview": "Overview",
 			"profile": "Profile",
-			"exams": "Exams",
+			"exams": "Transcript",
 			"calendar": "Calendar"
 		},
 		"overview": {
@@ -172,7 +173,7 @@
 	},
 	"calendar": {
 		"title": "Calendar",
-		"intro": "Pick a day to set an exam date or remove one.",
+		"intro": "Pick a day to schedule an exam date, remove it or record the result.",
 		"today": "today",
 		"examsOne": "{count} exam",
 		"examsMany": "{count} exams",
@@ -184,8 +185,8 @@
 			"today": "Today"
 		},
 		"picker": {
-			"scheduled": "Exams scheduled for this day",
-			"noneScheduled": "No exams scheduled for this day.",
+			"scheduled": "Exams on this day",
+			"noneScheduled": "No exams on this day.",
 			"unschedule": "Remove from this day",
 			"unscheduleLabel": "Remove {name} from this day",
 			"catalog": "Add an exam",
@@ -200,7 +201,12 @@
 			"add": "Add",
 			"addLabel": "Add {name}",
 			"move": "Move here",
-			"moveLabel": "Move {name} here"
+			"moveLabel": "Move {name} here",
+			"passedOn": "Passed on {date} with {grade}",
+			"attemptsLabel": "Results for {name} on this day",
+			"record": "Record result",
+			"recordLabel": "Record the result for {name}",
+			"recordLater": "You can record the result on or after the exam date."
 		},
 		"create": {
 			"open": "Create exam",
@@ -219,7 +225,13 @@
 			"unchanged": "{name} was already scheduled for this day.",
 			"created": "{name} added to the catalogue and scheduled for this day.",
 			"reused": "{name} ({cfu} credits) was already in the catalogue, so that one was used.",
-			"removed": "{name} removed from this day. It's still in your transcript."
+			"removed": "{name} removed from this day. It's still in your transcript.",
+			"attempt": {
+				"passed": "{name}: {grade}, exam passed.",
+				"failed": "{name}: {grade}, exam not passed.",
+				"rejected": "{name}: {grade} recorded as a declined grade.",
+				"withdrawn": "{name}: recorded as withdrawn or absent."
+			}
 		},
 		"errors": {
 			"invalidDate": "That date isn't valid.",
@@ -228,7 +240,140 @@
 			"nameRequired": "Please enter the exam name.",
 			"nameTooLong": "Name can't be longer than {max} characters.",
 			"cfuInvalid": "Please enter a whole number of credits between {min} and {max}.",
+			"generic": "Couldn't save. Please try again.",
+			"alreadyPassed": "You've already passed {name}, so it can't be scheduled anymore.",
+			"attemptAlreadyPassed": "You've already passed {name}, so it can't have another accepted passing grade.",
+			"futureAttempt": "You can't record a result for a day that hasn't come yet.",
+			"gradeInvalid": "Choose a grade, or withdrawn or absent.",
+			"rejectedInsufficient": "You can only decline a grade of {min} or higher.",
+			"notesTooLong": "Notes can't be longer than {max} characters."
+		},
+		"attempt": {
+			"formLabel": "Result for {name}",
+			"grade": "Grade",
+			"gradePlaceholder": "Choose a grade",
+			"sufficient": "Passing grades",
+			"insufficient": "Failing grades",
+			"absent": "Withdrawn or absent",
+			"rejected": "Declined grade",
+			"rejectedHint": "Only for a grade of {min} or higher.",
+			"notes": "Notes",
+			"notesHint": "Optional, up to {max} characters.",
+			"submit": "Save result",
+			"cancel": "Cancel"
+		}
+	},
+	"grades": {
+		"lode": "30 cum laude",
+		"lodeShort": "30L",
+		"withdrawnShort": "W",
+		"outcome": {
+			"passed": "Passed",
+			"failed": "Failed",
+			"rejected": "Declined",
+			"withdrawn": "Withdrawn or absent"
+		},
+		"outcomeLong": {
+			"passed": "{grade}, passed",
+			"failed": "{grade}, failed",
+			"rejected": "{grade}, declined",
+			"withdrawn": "withdrawn or absent"
+		}
+	},
+	"transcript": {
+		"title": "Transcript",
+		"intro": "The exams in your transcript, with grades, attempts and lecturers. Open an exam to see its history.",
+		"status": {
+			"passedOn": "Passed on {date}",
+			"failed": "Not passed",
+			"pending": "To take"
+		},
+		"planned": "Exam date: {date}",
+		"teacherShort": "Lecturer: {name}",
+		"attemptsNone": "No attempts",
+		"attemptsOne": "{count} attempt",
+		"attemptsMany": "{count} attempts",
+		"teacher": {
+			"label": "Lecturer",
+			"hint": "Optional. Leave blank to remove it.",
+			"submit": "Save lecturer",
+			"saved": "Lecturer saved."
+		},
+		"attempts": {
+			"title": "Attempts",
+			"none": "No attempts recorded yet. You can record a result from the calendar, on the exam date.",
+			"delete": "Delete attempt",
+			"confirmDelete": "Delete the attempt from {date}? This can't be undone.",
+			"confirm": "Delete",
+			"cancel": "Cancel"
+		},
+		"calendar": {
+			"show": "Show in calendar",
+			"showPlanned": "Show the exam date in calendar",
+			"plan": "Schedule an exam date in calendar"
+		},
+		"groups": {
+			"passed": "Passed ({count})",
+			"passedNone": "No exams passed yet.",
+			"toTake": "To take ({count})",
+			"toTakeNone": "You have passed every exam in your transcript."
+		},
+		"empty": {
+			"text": "Your transcript is empty. Schedule your first exam date from the calendar, or import your past exams from your profile.",
+			"calendar": "Open the calendar",
+			"import": "Import past exams"
+		},
+		"messages": {
+			"attemptDeleted": "Attempt deleted."
+		},
+		"errors": {
+			"examNotFound": "This exam isn't in your transcript.",
+			"attemptNotFound": "This attempt doesn't exist or has already been deleted.",
+			"teacherTooLong": "Lecturer name can't be longer than {max} characters.",
 			"generic": "Couldn't save. Please try again."
+		}
+	},
+	"import": {
+		"title": "Import past exams",
+		"intro": "Paste a JSON list of the exams you've already taken, up to {items} items and {size} KB. If any item has an error, nothing is saved.",
+		"fields": {
+			"name": "exam name, up to {nameMax} characters",
+			"cfu": "credits, a whole number from {cfuMin} to {cfuMax}",
+			"date": "exam date in YYYY-MM-DD format, not in the future",
+			"grade": "grade from 1 to 30, \"30L\" or 31 for 30 cum laude, null if withdrawn or absent",
+			"rejected": "optional, true if you declined a pass grade",
+			"teacher": "optional, the exam's lecturer (up to {teacherMax} characters)",
+			"notes": "optional, up to {notesMax} characters"
+		},
+		"example": "Format example",
+		"copy": "Copy example",
+		"copied": "Example copied.",
+		"label": "JSON list",
+		"submit": "Import exams",
+		"success": "Import complete. Attempts imported: {attempts}. New exams in the catalogue: {newExams}. Duplicates skipped: {duplicates}.",
+		"errors": {
+			"title": "No exams were imported. Fix these errors ({count}) and try again.",
+			"row": "Row {row}: {message}",
+			"empty": "Paste the JSON list to import.",
+			"tooLarge": "The text is larger than {max} KB.",
+			"invalidJson": "The text is not valid JSON.",
+			"notArray": "The JSON must be a list in square brackets.",
+			"count": "The list must have between 1 and {max} items.",
+			"notObject": "the item must be an object in curly braces",
+			"nameRequired": "the exam name is missing",
+			"nameTooLong": "the name can be at most {max} characters long",
+			"cfuInvalid": "credits must be a whole number between {min} and {max}",
+			"dateInvalid": "invalid date, use YYYY-MM-DD format",
+			"dateFuture": "the date is in the future",
+			"gradeMissing": "the grade is missing (use null for withdrawn or absent)",
+			"gradeInvalid": "invalid grade",
+			"rejectedInvalid": "rejected must be true or false",
+			"rejectedInsufficient": "only a grade of {min} or higher can be declined",
+			"teacherInvalid": "the lecturer must be text of up to {max} characters",
+			"notesInvalid": "notes must be text of up to {max} characters",
+			"passedTwice": "{name} is also marked as passed in row {other}",
+			"alreadyPassed": "{name} is already marked as passed in your transcript",
+			"generic": "Couldn't import. Please try again."
 		}
 	}
 }

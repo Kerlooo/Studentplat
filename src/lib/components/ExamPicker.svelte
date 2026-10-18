@@ -4,20 +4,27 @@
 	import { getDateFormat, getT } from '#lib/i18n/context.js';
 	import { isoToUtcDate } from '#lib/calendar.js';
 	import { examSearchKey } from '#lib/exam-rules.js';
+	import { attemptOutcome, formatGrade } from '#lib/grade-rules.js';
+	import AttemptForm from './AttemptForm.svelte';
+	import AttemptList from './AttemptList.svelte';
 	import CreateExamForm from './CreateExamForm.svelte';
 
 	/**
-	 * Contenuto del popup di un giorno: esami fissati, catalogo con ricerca e creazione.
+	 * Contenuto del popup di un giorno: esami del giorno (fissati o con un esito registrato)
+	 * con i loro tentativi e "Registra esito", poi catalogo con ricerca e creazione.
+	 * Gli esami gia' superati non si possono piu' fissare ne' registrare.
 	 * Dopo ogni azione il popup resta aperto e mostra l'esito (vedi `message`).
 	 *
 	 * @type {{
 	 * 	date: string,
+	 * 	today: string,
 	 * 	month: string,
 	 * 	catalog: import('#lib/server/exams.js').CatalogExam[],
+	 * 	attempts: import('#lib/grade-rules.js').Attempt[],
 	 * 	headingId: string,
 	 * }}
 	 */
-	let { date, month, catalog, headingId } = $props();
+	let { date, today, month, catalog, attempts, headingId } = $props();
 
 	const t = getT();
 	const fullDate = getDateFormat({
@@ -36,6 +43,9 @@
 
 	let query = $state('');
 	let creating = $state(false);
+	/** Esame del libretto di cui e' aperto il form "Registra esito". */
+	/** @type {number | null} */
+	let recordingId = $state(null);
 	let pending = $state(false);
 	/** @type {{ kind: 'success' | 'error', text: string } | null} */
 	let message = $state(null);
@@ -44,13 +54,43 @@
 	/** @type {HTMLButtonElement | undefined} */
 	let createToggle = $state();
 
-	let scheduled = $derived(catalog.filter((exam) => exam.plannedDate === date));
+	// Tentativi registrati in questo giorno, per esame del catalogo
+	let dayAttempts = $derived.by(() => {
+		/** @type {Record<number, import('#lib/grade-rules.js').Attempt[]>} */
+		const byExam = {};
+		for (const attempt of attempts) {
+			if (attempt.date === date) (byExam[attempt.examId] ??= []).push(attempt);
+		}
+		return byExam;
+	});
+	// Esami del giorno: fissati qui oppure con un esito registrato qui
+	let scheduled = $derived(
+		catalog.filter((exam) => exam.plannedDate === date || exam.id in dayAttempts)
+	);
+	let canRecord = $derived(date <= today);
 	let searchKey = $derived(examSearchKey(query));
 	let matches = $derived(
 		searchKey ? catalog.filter((exam) => examSearchKey(exam.name).includes(searchKey)) : catalog
 	);
-	// Quelli gia' fissati in questo giorno stanno nella sezione sopra
-	let available = $derived(matches.filter((exam) => exam.plannedDate !== date));
+	// Quelli del giorno stanno nella sezione sopra
+	let available = $derived(matches.filter((exam) => !scheduled.includes(exam)));
+
+	/** @param {NonNullable<import('#lib/server/exams.js').CatalogExam['passed']>} passed */
+	const passedText = (passed) =>
+		t('calendar.picker.passedOn', {
+			date: formatShort(passed.date),
+			grade: /** @type {string} */ (formatGrade(passed.grade, t('grades.lode')))
+		});
+
+	/**
+	 * Testo di esito della registrazione di un tentativo.
+	 * @param {Record<string, any>} data
+	 */
+	function describeAttempt(data) {
+		const outcome = attemptOutcome({ grade: data.grade, rejected: !!data.rejected });
+		const grade = formatGrade(data.grade, t('grades.lode')) ?? '';
+		return t(`calendar.messages.attempt.${outcome}`, { name: data.exam.name, grade });
+	}
 
 	/**
 	 * Testo di esito di add/create a partire dalla risposta dell'action.
@@ -94,7 +134,7 @@
 			} else if (result.type === 'failure') {
 				await showMessage({
 					kind: 'error',
-					text: t(result.data?.error ?? 'calendar.errors.generic')
+					text: t(result.data?.error ?? 'calendar.errors.generic', result.data?.params)
 				});
 			} else if (result.type === 'error') {
 				await showMessage({ kind: 'error', text: t('calendar.errors.generic') });
@@ -107,6 +147,27 @@
 		creating = false;
 		query = '';
 		await showMessage({ kind: 'success', text: describeSchedule(data) });
+	}
+
+	/** @param {Record<string, any>} data */
+	async function handleRecorded(data) {
+		recordingId = null;
+		await showMessage({ kind: 'success', text: describeAttempt(data) });
+	}
+
+	/** @param {number} userExamId */
+	async function toggleRecord(userExamId) {
+		recordingId = recordingId === userExamId ? null : userExamId;
+		if (recordingId === null) return;
+		await tick();
+		document.getElementById(`${headingId}-attempt-${userExamId}-grade`)?.focus();
+	}
+
+	/** @param {number} userExamId */
+	async function cancelRecord(userExamId) {
+		recordingId = null;
+		await tick();
+		document.getElementById(`${headingId}-record-${userExamId}`)?.focus();
 	}
 
 	async function toggleCreate() {
@@ -142,25 +203,79 @@
 		{#if scheduled.length > 0}
 			<ul class="exam-list">
 				{#each scheduled as exam (exam.id)}
-					<li class="exam-list-item">
+					{@const examAttempts = dayAttempts[exam.id] ?? []}
+					<li class="exam-list-item" class:is-passed={!!exam.passed}>
 						<span class="exam-list-name">{exam.name}</span>
 						<span class="exam-list-cfu">{t('calendar.cfuShort', { cfu: exam.cfu })}</span>
-						<form
-							class="exam-list-action"
-							method="POST"
-							action={actionUrl('unschedule')}
-							use:enhance={submitWith(() => t('calendar.messages.removed', { name: exam.name }))}
-						>
-							<input type="hidden" name="userExamId" value={exam.userExamId} />
-							<button
-								class="button button-secondary"
-								type="submit"
-								disabled={pending}
-								aria-label={t('calendar.picker.unscheduleLabel', { name: exam.name })}
-							>
-								{t('calendar.picker.unschedule')}
-							</button>
-						</form>
+						<!-- Superato in un altro giorno: lo si dice qui; se e' oggi lo mostra gia' l'elenco degli esiti -->
+						{#if exam.passed && exam.passed.date !== date}
+							<span class="exam-list-status">{passedText(exam.passed)}</span>
+						{/if}
+
+						{#if examAttempts.length > 0}
+							<div class="exam-list-attempts">
+								<AttemptList
+									attempts={examAttempts}
+									showDate={false}
+									label={t('calendar.picker.attemptsLabel', { name: exam.name })}
+								/>
+							</div>
+						{/if}
+
+						{#if !exam.passed && exam.userExamId !== null}
+							{@const userExamId = exam.userExamId}
+							<div class="exam-list-actions">
+								{#if canRecord}
+									<button
+										class="button button-primary"
+										type="button"
+										id="{headingId}-record-{userExamId}"
+										aria-expanded={recordingId === userExamId}
+										aria-controls="{headingId}-attempt-{userExamId}"
+										aria-label={t('calendar.picker.recordLabel', { name: exam.name })}
+										onclick={() => toggleRecord(userExamId)}
+									>
+										{t('calendar.picker.record')}
+									</button>
+								{/if}
+								{#if exam.plannedDate === date}
+									<form
+										class="exam-list-action"
+										method="POST"
+										action={actionUrl('unschedule')}
+										use:enhance={submitWith(() =>
+											t('calendar.messages.removed', { name: exam.name })
+										)}
+									>
+										<input type="hidden" name="userExamId" value={userExamId} />
+										<button
+											class="button button-secondary"
+											type="submit"
+											disabled={pending}
+											aria-label={t('calendar.picker.unscheduleLabel', { name: exam.name })}
+										>
+											{t('calendar.picker.unschedule')}
+										</button>
+									</form>
+								{/if}
+							</div>
+							{#if !canRecord}
+								<p class="exam-list-status">{t('calendar.picker.recordLater')}</p>
+							{/if}
+							<div class="exam-list-record" id="{headingId}-attempt-{userExamId}">
+								{#if recordingId === userExamId}
+									<AttemptForm
+										{userExamId}
+										examName={exam.name}
+										{date}
+										action={actionUrl('attempt')}
+										idPrefix="{headingId}-attempt-{userExamId}"
+										onsuccess={handleRecorded}
+										oncancel={() => cancelRecord(userExamId)}
+									/>
+								{/if}
+							</div>
+						{/if}
 					</li>
 				{/each}
 			</ul>
@@ -194,7 +309,11 @@
 					<li class="exam-list-item">
 						<span class="exam-list-name">{exam.name}</span>
 						<span class="exam-list-cfu">{t('calendar.cfuShort', { cfu: exam.cfu })}</span>
-						{#if exam.userExamId !== null}
+						{#if exam.passed}
+							<span class="exam-list-status" id="{headingId}-passed-{exam.id}">
+								{passedText(exam.passed)}
+							</span>
+						{:else if exam.userExamId !== null}
 							<span class="exam-list-status">
 								{exam.plannedDate
 									? t('calendar.picker.inTranscriptOn', { date: formatShort(exam.plannedDate) })
@@ -209,7 +328,17 @@
 						>
 							<input type="hidden" name="date" value={date} />
 							<input type="hidden" name="examId" value={exam.id} />
-							{#if exam.plannedDate}
+							{#if exam.passed}
+								<!-- Esame superato: azione disattivata, il motivo e' nello stato sopra -->
+								<button
+									class="button button-secondary"
+									type="submit"
+									disabled
+									aria-describedby="{headingId}-passed-{exam.id}"
+								>
+									{t('calendar.picker.add')}
+								</button>
+							{:else if exam.plannedDate}
 								<button
 									class="button button-secondary"
 									type="submit"
@@ -399,6 +528,29 @@
 	.exam-list-action {
 		margin: 0;
 		margin-inline-start: auto;
+	}
+
+	/* Tentativi, azioni e form "Registra esito" occupano ciascuno una riga intera */
+	.exam-list-attempts,
+	.exam-list-actions,
+	.exam-list-record {
+		flex-basis: 100%;
+		order: 4;
+		min-width: 0;
+	}
+
+	.exam-list-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+	}
+
+	.exam-list-actions .exam-list-action {
+		margin-inline-start: 0;
+	}
+
+	.exam-list-record:empty {
+		display: none;
 	}
 
 	.exam-list-action .button {

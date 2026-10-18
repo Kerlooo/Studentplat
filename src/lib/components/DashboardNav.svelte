@@ -5,10 +5,10 @@
 
 	const t = getT();
 
-	// Voci dell'area riservata. "Esami" andra' aggiunta qui:
-	// { path: '/dashboard/exams', label: 'dashboard.nav.exams', exact: false }
+	// Voci dell'area riservata
 	const items = /** @type {const} */ ([
 		{ path: '/dashboard', label: 'dashboard.nav.overview', exact: true },
+		{ path: '/dashboard/exams', label: 'dashboard.nav.exams', exact: false },
 		{ path: '/dashboard/calendar', label: 'dashboard.nav.calendar', exact: false },
 		{ path: '/dashboard/profile', label: 'dashboard.nav.profile', exact: false }
 	]);
