@@ -82,7 +82,9 @@
 			"login": "Accedi"
 		},
 		"footer": {
-			"text": "Studentplat, il libretto online per studenti universitari."
+			"text": "Studentplat, il libretto online per studenti universitari.",
+			"credits": "Realizzato da {name}, studente di Scienze e Tecnologie Informatiche",
+			"github": "Codice su GitHub"
 		}
 	},
 	"auth": {

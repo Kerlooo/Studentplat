@@ -82,7 +82,9 @@
 			"login": "Log in"
 		},
 		"footer": {
-			"text": "Studentplat, the online transcript for university students."
+			"text": "Studentplat, the online transcript for university students.",
+			"credits": "Made by {name}, Computer Science and Technology student",
+			"github": "Source code on GitHub"
 		}
 	},
 	"auth": {
