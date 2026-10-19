@@ -15,6 +15,7 @@
 	const items = /** @type {const} */ ([
 		{ path: '/dashboard', label: 'dashboard.nav.overview', exact: true },
 		{ path: '/dashboard/exams', label: 'dashboard.nav.exams', exact: false },
+		{ path: '/dashboard/stats', label: 'dashboard.nav.stats', exact: false },
 		{ path: '/dashboard/calendar', label: 'dashboard.nav.calendar', exact: false },
 		{ path: '/dashboard/profile', label: 'dashboard.nav.profile', exact: false }
 	]);

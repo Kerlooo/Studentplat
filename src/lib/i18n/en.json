@@ -8,7 +8,8 @@
 		"profileTitle": "Profile",
 		"calendarTitle": "Calendar",
 		"transcriptTitle": "Transcript",
-		"importTitle": "Import exams"
+		"importTitle": "Import exams",
+		"statsTitle": "Statistics"
 	},
 	"lang": {
 		"label": "Language",
@@ -134,6 +135,7 @@
 			"overview": "Overview",
 			"profile": "Profile",
 			"exams": "Transcript",
+			"stats": "Statistics",
 			"calendar": "Calendar",
 			"admin": "Admin"
 		},
@@ -353,6 +355,61 @@
 			"attemptNotFound": "This attempt doesn't exist or has already been deleted.",
 			"teacherTooLong": "Lecturer name can't be longer than {max} characters.",
 			"generic": "Couldn't save. Please try again."
+		}
+	},
+	"stats": {
+		"title": "Statistics",
+		"intro": "Averages, grades and attempts calculated from the exams in your transcript.",
+		"empty": {
+			"text": "Averages and the grade trend appear from your first passed exam. Record your exam results and your numbers will show up here.",
+			"link": "Open the transcript"
+		},
+		"averages": {
+			"heading": "Averages",
+			"weighted": "Weighted average",
+			"weightedHint": "Each grade counts as much as its credits",
+			"arithmetic": "Arithmetic average",
+			"graduation": "Graduation base",
+			"graduationHint": "Weighted average scaled to 110"
+		},
+		"summary": {
+			"heading": "Summary",
+			"passed": "Exams passed",
+			"toTake": "Exams to take",
+			"cfu": "Credits earned",
+			"cfuOf": "{earned} of {total}",
+			"highest": "Highest grade",
+			"lowest": "Lowest grade",
+			"lodes": "Cum laude"
+		},
+		"distribution": {
+			"heading": "Grade distribution",
+			"band": "Grades from {min} to {max}",
+			"count": "{label}: {count}"
+		},
+		"attempts": {
+			"heading": "Attempts",
+			"total": "Attempts recorded",
+			"passed": "Passed",
+			"withdrawn": "Withdrawn or absent",
+			"failed": "Failed",
+			"rejected": "Declined grades",
+			"firstTry": "Exams passed at the first attempt",
+			"firstTryValue": "{percent} ({count} of {total})"
+		},
+		"trend": {
+			"heading": "Grade trend",
+			"legendGrade": "Exam grade",
+			"legendAverage": "Weighted average up to that exam",
+			"desc": "{count} exams passed from {first} to {last}. The cumulative weighted average goes from {start} to {end}.",
+			"descOne": "One exam passed on {date} with {grade}.",
+			"point": "{name}: {grade}, {date}",
+			"caption": "Grades of passed exams in date order",
+			"date": "Date",
+			"exam": "Exam",
+			"cfu": "Credits",
+			"grade": "Grade",
+			"average": "Weighted average"
 		}
 	},
 	"import": {

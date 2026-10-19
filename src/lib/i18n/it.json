@@ -8,7 +8,8 @@
 		"profileTitle": "Profilo",
 		"calendarTitle": "Calendario",
 		"transcriptTitle": "Libretto",
-		"importTitle": "Importa esami"
+		"importTitle": "Importa esami",
+		"statsTitle": "Statistiche"
 	},
 	"lang": {
 		"label": "Lingua",
@@ -134,6 +135,7 @@
 			"overview": "Panoramica",
 			"profile": "Profilo",
 			"exams": "Libretto",
+			"stats": "Statistiche",
 			"calendar": "Calendario",
 			"admin": "Admin"
 		},
@@ -353,6 +355,61 @@
 			"attemptNotFound": "Questo tentativo non esiste o è già stato eliminato.",
 			"teacherTooLong": "Il nome del docente può avere al massimo {max} caratteri.",
 			"generic": "Non è stato possibile salvare. Riprova."
+		}
+	},
+	"stats": {
+		"title": "Statistiche",
+		"intro": "Medie, voti e tentativi calcolati sugli esami del tuo libretto.",
+		"empty": {
+			"text": "Medie e andamento dei voti compaiono dal primo esame superato. Registra gli esiti degli appelli e ritrovi qui i tuoi numeri.",
+			"link": "Apri il libretto"
+		},
+		"averages": {
+			"heading": "Medie",
+			"weighted": "Media ponderata",
+			"weightedHint": "Ogni voto pesa quanto i suoi CFU",
+			"arithmetic": "Media aritmetica",
+			"graduation": "Base di laurea",
+			"graduationHint": "Media ponderata riportata su 110"
+		},
+		"summary": {
+			"heading": "Riepilogo",
+			"passed": "Esami superati",
+			"toTake": "Esami da sostenere",
+			"cfu": "CFU ottenuti",
+			"cfuOf": "{earned} su {total}",
+			"highest": "Voto più alto",
+			"lowest": "Voto più basso",
+			"lodes": "Lodi"
+		},
+		"distribution": {
+			"heading": "Distribuzione dei voti",
+			"band": "Voti da {min} a {max}",
+			"count": "{label}: {count}"
+		},
+		"attempts": {
+			"heading": "Tentativi",
+			"total": "Tentativi registrati",
+			"passed": "Superati",
+			"withdrawn": "Ritirati o assenti",
+			"failed": "Insufficienti",
+			"rejected": "Voti rifiutati",
+			"firstTry": "Esami superati al primo tentativo",
+			"firstTryValue": "{percent} ({count} su {total})"
+		},
+		"trend": {
+			"heading": "Andamento dei voti",
+			"legendGrade": "Voto dell'esame",
+			"legendAverage": "Media ponderata fino a quell'esame",
+			"desc": "{count} esami superati dal {first} al {last}. La media ponderata cumulativa passa da {start} a {end}.",
+			"descOne": "Un esame superato il {date} con {grade}.",
+			"point": "{name}: {grade}, {date}",
+			"caption": "Voti degli esami superati in ordine di data",
+			"date": "Data",
+			"exam": "Esame",
+			"cfu": "CFU",
+			"grade": "Voto",
+			"average": "Media ponderata"
 		}
 	},
 	"import": {
