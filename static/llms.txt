@@ -19,6 +19,7 @@ Important notes:
 - [Calendar](/dashboard/calendar): Monthly calendar of the student's exam sessions and results (`?month=YYYY-MM`, default current month). Selecting a day lets the student schedule an exam from the shared catalogue, move an exam already in their transcript to that day, remove it from the day, create a new catalogue exam, or record the result of an exam on that day (grade 1-30 or 30L, withdrawn/absent, declined grade, notes). Days with a result show the grade (login required).
 - [Profile](/dashboard/profile): Nickname, degree programme, university and total credits of the degree, with a link to the import page (login required).
 - [Import past exams](/dashboard/profile/import): Adds past exam attempts to the transcript from a pasted JSON list, with the format description and a copyable example (login required, see below).
+- Admin panel (`/admin`): reserved to site administrators; other users get a 404.
 
 ## Importing past exams
 

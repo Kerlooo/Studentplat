@@ -1,6 +1,12 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { db } from '#lib/server/db.js';
-import { createSession, hashPassword, setSessionCookie, verifyPassword } from '#lib/server/auth.js';
+import {
+	createSession,
+	hashPassword,
+	recordLogin,
+	setSessionCookie,
+	verifyPassword
+} from '#lib/server/auth.js';
 import { EMAIL_MAX, NAME_MAX, PASSWORD_MAX, PASSWORD_MIN } from '#lib/auth-rules.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,6 +48,7 @@ export const actions = {
 		if (!user || !ok) return invalid();
 
 		const { token, expiresAt } = await createSession(user.id);
+		await recordLogin(user.id);
 		setSessionCookie(cookies, token, expiresAt);
 		redirect(303, '/dashboard');
 	},
@@ -97,6 +104,7 @@ export const actions = {
 		}
 
 		const { token, expiresAt } = await createSession(userId);
+		await recordLogin(userId);
 		setSessionCookie(cookies, token, expiresAt);
 		redirect(303, '/dashboard');
 	}

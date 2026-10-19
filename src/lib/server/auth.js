@@ -1,6 +1,6 @@
 import { createHash, randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { dev } from '$app/env';
 import { db } from './db.js';
 
@@ -71,7 +71,7 @@ export async function validateSession(token) {
 	const id = hashToken(token);
 	const [rows] = /** @type {[import('mysql2').RowDataPacket[], unknown]} */ (
 		await db.execute(
-			`SELECT s.expires_at, u.id, u.email, u.name, u.nickname
+			`SELECT s.expires_at, u.id, u.email, u.name, u.nickname, u.role
 			 FROM sessions s JOIN users u ON u.id = s.user_id
 			 WHERE s.id = ?`,
 			[id]
@@ -94,7 +94,13 @@ export async function validateSession(token) {
 	}
 
 	return {
-		user: { id: row.id, email: row.email, name: row.name, nickname: row.nickname ?? null },
+		user: {
+			id: row.id,
+			email: row.email,
+			name: row.name,
+			nickname: row.nickname ?? null,
+			role: row.role === 'admin' ? 'admin' : 'user'
+		},
 		expiresAt,
 		renewed
 	};
@@ -130,6 +136,27 @@ export function setSessionCookie(cookies, token, expiresAt) {
 export function requireUser(locals) {
 	if (!locals.user) redirect(303, '/login');
 	return locals.user;
+}
+
+/**
+ * Garantisce che la richiesta venga da un amministratore: l'ospite va alla pagina di accesso,
+ * a un utente normale il pannello non risulta (404). Come requireUser, va chiamata
+ * in ogni load e action sotto /admin.
+ * @param {App.Locals} locals
+ * @returns {App.User}
+ */
+export function requireAdmin(locals) {
+	const user = requireUser(locals);
+	if (user.role !== 'admin') error(404);
+	return user;
+}
+
+/**
+ * Registra l'accesso riuscito (login o registrazione) per il pannello admin.
+ * @param {number} userId
+ */
+export async function recordLogin(userId) {
+	await db.execute('UPDATE users SET last_login_at = ? WHERE id = ?', [new Date(), userId]);
 }
 
 /** @param {import('@sveltejs/kit').Cookies} cookies */

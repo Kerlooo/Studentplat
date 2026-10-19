@@ -274,12 +274,18 @@ export async function addAttempt(userId, userExamId, attempt) {
 	const conn = await db.getConnection();
 	try {
 		await conn.beginTransaction();
+		// Lock solo sulla voce del libretto: l'esame si legge senza lock, cosi' l'ordine
+		// resta compatibile con cancellazione e unione dal pannello admin (prima exams, poi user_exams)
+		const [locked] = /** @type {[Rows, unknown]} */ (
+			await conn.execute('SELECT exam_id FROM user_exams WHERE id = ? AND user_id = ? FOR UPDATE', [
+				userExamId,
+				userId
+			])
+		);
 		const [rows] = /** @type {[Rows, unknown]} */ (
-			await conn.execute(
-				`SELECT ue.id, e.name, e.cfu FROM user_exams ue JOIN exams e ON e.id = ue.exam_id
-				 WHERE ue.id = ? AND ue.user_id = ? FOR UPDATE`,
-				[userExamId, userId]
-			)
+			locked[0]
+				? await conn.execute('SELECT name, cfu FROM exams WHERE id = ?', [locked[0].exam_id])
+				: [[]]
 		);
 		const row = rows[0];
 		if (!row) {

@@ -72,3 +72,8 @@ CREATE TABLE IF NOT EXISTS exam_attempts (
 -- Informazioni personali facoltative sull'esame del libretto
 ALTER TABLE user_exams
 	ADD COLUMN IF NOT EXISTS teacher VARCHAR(150) NULL AFTER planned_date;
+
+-- Pannello admin: ruolo dell'utente (il primo admin si imposta a mano) e ultimo accesso (NULL = non disponibile)
+ALTER TABLE users
+	ADD COLUMN IF NOT EXISTS role ENUM('user','admin') NOT NULL DEFAULT 'user',
+	ADD COLUMN IF NOT EXISTS last_login_at DATETIME NULL;

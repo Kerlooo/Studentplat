@@ -2,11 +2,11 @@
 	import DashboardNav from '#lib/components/DashboardNav.svelte';
 
 	/** @type {import('./$types').LayoutProps} */
-	let { children } = $props();
+	let { data, children } = $props();
 </script>
 
 <div class="dashboard-area">
-	<DashboardNav />
+	<DashboardNav isAdmin={data.role === 'admin'} />
 	<div class="dashboard-content">
 		{@render children()}
 	</div>

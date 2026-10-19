@@ -3,6 +3,12 @@
 	import { resolve } from '$app/paths';
 	import { getT } from '#lib/i18n/context.js';
 
+	/**
+	 * Indice dell'area riservata; agli amministratori mostra anche la voce del pannello admin.
+	 * @type {{ isAdmin?: boolean }}
+	 */
+	let { isAdmin = false } = $props();
+
 	const t = getT();
 
 	// Voci dell'area riservata
@@ -12,8 +18,15 @@
 		{ path: '/dashboard/calendar', label: 'dashboard.nav.calendar', exact: false },
 		{ path: '/dashboard/profile', label: 'dashboard.nav.profile', exact: false }
 	]);
+	const adminItem = /** @type {const} */ ({
+		path: '/admin',
+		label: 'dashboard.nav.admin',
+		exact: false
+	});
 
-	/** @param {{ path: (typeof items)[number]['path'], exact: boolean }} item */
+	let visibleItems = $derived(isAdmin ? [...items, adminItem] : items);
+
+	/** @param {{ path: (typeof visibleItems)[number]['path'], exact: boolean }} item */
 	const isCurrent = (item) => {
 		// resolve() in SSR puo' restituire percorsi relativi: si confronta il pathname assoluto
 		const href = new URL(resolve(item.path), page.url.href).pathname;
@@ -26,7 +39,7 @@
 <div class="dashboard-bar">
 	<nav class="dashboard-nav" aria-label={t('dashboard.nav.label')}>
 		<ul class="dashboard-nav-list">
-			{#each items as item (item.path)}
+			{#each visibleItems as item (item.path)}
 				<li>
 					<a
 						class="dashboard-nav-link"

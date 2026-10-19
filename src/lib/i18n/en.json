@@ -134,7 +134,8 @@
 			"overview": "Overview",
 			"profile": "Profile",
 			"exams": "Transcript",
-			"calendar": "Calendar"
+			"calendar": "Calendar",
+			"admin": "Admin"
 		},
 		"overview": {
 			"studiesHeading": "Your studies",
@@ -397,5 +398,182 @@
 			"generic": "Couldn't import. Please try again."
 		},
 		"back": "Back to profile"
+	},
+	"admin": {
+		"meta": {
+			"overview": "Admin panel",
+			"users": "Users",
+			"exams": "Exam catalogue"
+		},
+		"nav": {
+			"label": "Admin panel",
+			"overview": "Overview",
+			"users": "Users",
+			"exams": "Exams",
+			"back": "Back to dashboard"
+		},
+		"overview": {
+			"title": "Admin panel",
+			"intro": "Site-wide numbers: registered students, shared catalogue and recorded results."
+		},
+		"stats": {
+			"users": "Registered users",
+			"newUsers": "New in the last 30 days",
+			"admins": "Administrators",
+			"exams": "Exams in the catalogue",
+			"userExams": "Transcript entries",
+			"attempts": "Recorded attempts"
+		},
+		"roles": {
+			"user": "Student",
+			"admin": "Administrator"
+		},
+		"search": {
+			"submit": "Search",
+			"clear": "Show all"
+		},
+		"pagination": {
+			"label": "List pages",
+			"prev": "Previous page",
+			"next": "Next page",
+			"position": "Page {page} of {pages}"
+		},
+		"confirm": {
+			"cancel": "Cancel"
+		},
+		"users": {
+			"title": "Users",
+			"count": "Registered users: {count}",
+			"countSearch": "Results for \"{q}\": {count}",
+			"searchLabel": "Search by email, name or nickname",
+			"empty": "No registered users.",
+			"emptySearch": "No users match your search. Try part of the email or name.",
+			"never": "Not available",
+			"columns": {
+				"email": "Email",
+				"name": "Name",
+				"nickname": "Nickname",
+				"role": "Role",
+				"createdAt": "Signed up",
+				"lastLoginAt": "Last login"
+			}
+		},
+		"user": {
+			"back": "All users",
+			"roleSelf": "{role} (you)",
+			"empty": "Not set",
+			"fields": {
+				"name": "Name",
+				"nickname": "Nickname",
+				"degreeCourse": "Degree programme",
+				"university": "University",
+				"totalCfu": "Total degree credits",
+				"createdAt": "Signed up",
+				"lastLoginAt": "Last login",
+				"userExams": "Exams in transcript",
+				"attempts": "Recorded attempts",
+				"activeSessions": "Active sessions"
+			},
+			"role": {
+				"title": "Role",
+				"current": "Current role: {role}.",
+				"promote": "Make administrator",
+				"demote": "Change back to student",
+				"saved": "Role updated: {role}.",
+				"selfHint": "You can't change your own role: ask another administrator."
+			},
+			"sessions": {
+				"title": "Sessions",
+				"active": "Active sessions: {count}",
+				"submit": "Close all sessions",
+				"closed": "Sessions closed: {count}. The user will have to log in again.",
+				"selfHint": "Closing your sessions also logs you out on this device."
+			},
+			"delete": {
+				"title": "Delete user",
+				"text": "The user loses access and their data is deleted. This can't be undone.",
+				"submit": "Delete user",
+				"question": "Delete the user {email}?",
+				"detailUserExams": "Transcript exams deleted: {count}",
+				"detailAttempts": "Attempts deleted: {count}",
+				"detailSessions": "Active sessions closed: {count}",
+				"detailCatalog": "Exams they created stay in the catalogue, without an author.",
+				"confirm": "Yes, delete the user"
+			}
+		},
+		"exams": {
+			"title": "Exam catalogue",
+			"count": "Exams in the catalogue: {count}",
+			"countSearch": "Results for \"{q}\": {count}",
+			"searchLabel": "Search by exam name",
+			"empty": "The catalogue is empty: exams appear when a student creates them from the calendar or an import.",
+			"emptySearch": "No exams match your search. Try part of the name.",
+			"deletedUser": "Deleted user",
+			"columns": {
+				"name": "Exam",
+				"cfu": "Credits",
+				"creator": "Created by",
+				"userExams": "Transcripts",
+				"attempts": "Attempts"
+			}
+		},
+		"exam": {
+			"back": "Whole catalogue",
+			"option": "{name} ({cfu} credits)",
+			"fields": {
+				"creator": "Created by",
+				"createdAt": "Created on",
+				"userExams": "Transcripts containing it",
+				"attempts": "Recorded attempts"
+			},
+			"edit": {
+				"title": "Edit exam",
+				"name": "Name",
+				"cfu": "Credits",
+				"submit": "Save changes",
+				"saved": "Changes saved.",
+				"mergeHint": "To combine the two exams use \"Merge into another exam\" below: the existing exam is already selected."
+			},
+			"merge": {
+				"title": "Merge into another exam",
+				"text": "For duplicates: transcripts and attempts of this exam move to the chosen exam, then this exam is deleted.",
+				"target": "Exam to merge into",
+				"choose": "Choose an exam",
+				"submit": "Merge",
+				"question": "Merge {source} into {target}?",
+				"questionNoTarget": "First choose the exam to merge into.",
+				"detailUserExams": "Transcripts moved: {count}. Students who already had both exams keep the session date and lecturer of the chosen exam.",
+				"detailAttempts": "Attempts moved: {count}",
+				"detailDelete": "{name} is deleted from the catalogue.",
+				"detailConflict": "If a student passed both exams the merge is blocked.",
+				"confirm": "Yes, merge",
+				"none": "There are no other exams in the catalogue to merge with."
+			},
+			"delete": {
+				"title": "Delete exam",
+				"text": "The exam disappears from the catalogue and from every student's transcript, with their attempts. This can't be undone.",
+				"submit": "Delete exam",
+				"question": "Delete {name} from the catalogue?",
+				"detailUserExams": "Transcript entries deleted: {count}",
+				"detailAttempts": "Attempts deleted: {count}",
+				"confirm": "Yes, delete the exam"
+			}
+		},
+		"errors": {
+			"generic": "The operation failed because of a server error. Try again shortly.",
+			"userNotFound": "User not found: they may have been deleted. Go back to the user list.",
+			"examNotFound": "Exam not found: it may have been deleted or merged into another. Go back to the catalogue.",
+			"targetNotFound": "The exam chosen for the merge no longer exists. Choose another one.",
+			"targetRequired": "Choose the exam to merge this one into.",
+			"mergeSame": "An exam can't be merged into itself: choose another one.",
+			"mergeConflict": "Merge blocked: these students passed both exams. Delete one of the two passes from their transcript and try again.",
+			"selfRole": "You can't change your own role.",
+			"selfDelete": "You can't delete your own account from the panel.",
+			"roleInvalid": "Invalid role.",
+			"nameRequired": "Enter the exam name.",
+			"nameTooLong": "The name can be at most {max} characters.",
+			"cfuInvalid": "Credits must be a whole number from {min} to {max}.",
+			"duplicate": "{name} ({cfu} credits) is already in the catalogue."
+		}
 	}
 }

@@ -134,7 +134,8 @@
 			"overview": "Panoramica",
 			"profile": "Profilo",
 			"exams": "Libretto",
-			"calendar": "Calendario"
+			"calendar": "Calendario",
+			"admin": "Admin"
 		},
 		"overview": {
 			"studiesHeading": "Il tuo percorso di studi",
@@ -397,5 +398,182 @@
 			"generic": "Non è stato possibile importare. Riprova."
 		},
 		"back": "Torna al profilo"
+	},
+	"admin": {
+		"meta": {
+			"overview": "Pannello admin",
+			"users": "Utenti",
+			"exams": "Catalogo esami"
+		},
+		"nav": {
+			"label": "Pannello admin",
+			"overview": "Panoramica",
+			"users": "Utenti",
+			"exams": "Esami",
+			"back": "Torna alla dashboard"
+		},
+		"overview": {
+			"title": "Pannello admin",
+			"intro": "Numeri generali del sito: studenti iscritti, catalogo condiviso ed esiti registrati."
+		},
+		"stats": {
+			"users": "Utenti registrati",
+			"newUsers": "Nuovi negli ultimi 30 giorni",
+			"admins": "Amministratori",
+			"exams": "Esami nel catalogo",
+			"userExams": "Voci di libretto",
+			"attempts": "Tentativi registrati"
+		},
+		"roles": {
+			"user": "Studente",
+			"admin": "Amministratore"
+		},
+		"search": {
+			"submit": "Cerca",
+			"clear": "Mostra tutti"
+		},
+		"pagination": {
+			"label": "Pagine dell'elenco",
+			"prev": "Pagina precedente",
+			"next": "Pagina successiva",
+			"position": "Pagina {page} di {pages}"
+		},
+		"confirm": {
+			"cancel": "Annulla"
+		},
+		"users": {
+			"title": "Utenti",
+			"count": "Utenti registrati: {count}",
+			"countSearch": "Risultati per \"{q}\": {count}",
+			"searchLabel": "Cerca per email, nome o nickname",
+			"empty": "Nessun utente registrato.",
+			"emptySearch": "Nessun utente corrisponde alla ricerca. Prova con una parte dell'email o del nome.",
+			"never": "Non disponibile",
+			"columns": {
+				"email": "Email",
+				"name": "Nome",
+				"nickname": "Nickname",
+				"role": "Ruolo",
+				"createdAt": "Registrazione",
+				"lastLoginAt": "Ultimo accesso"
+			}
+		},
+		"user": {
+			"back": "Tutti gli utenti",
+			"roleSelf": "{role} (sei tu)",
+			"empty": "Non indicato",
+			"fields": {
+				"name": "Nome",
+				"nickname": "Nickname",
+				"degreeCourse": "Corso di studi",
+				"university": "Ateneo",
+				"totalCfu": "CFU totali del corso",
+				"createdAt": "Registrazione",
+				"lastLoginAt": "Ultimo accesso",
+				"userExams": "Esami nel libretto",
+				"attempts": "Tentativi registrati",
+				"activeSessions": "Sessioni attive"
+			},
+			"role": {
+				"title": "Ruolo",
+				"current": "Ruolo attuale: {role}.",
+				"promote": "Rendi amministratore",
+				"demote": "Riporta a studente",
+				"saved": "Ruolo aggiornato: {role}.",
+				"selfHint": "Non puoi cambiare il tuo ruolo: chiedilo a un altro amministratore."
+			},
+			"sessions": {
+				"title": "Sessioni",
+				"active": "Sessioni attive: {count}",
+				"submit": "Chiudi tutte le sessioni",
+				"closed": "Sessioni chiuse: {count}. L'utente dovrà accedere di nuovo.",
+				"selfHint": "Chiudendo le tue sessioni esci anche da questo dispositivo."
+			},
+			"delete": {
+				"title": "Elimina utente",
+				"text": "L'utente perde l'accesso e i suoi dati vengono cancellati. L'operazione non si può annullare.",
+				"submit": "Elimina utente",
+				"question": "Eliminare l'utente {email}?",
+				"detailUserExams": "Esami nel libretto eliminati: {count}",
+				"detailAttempts": "Tentativi eliminati: {count}",
+				"detailSessions": "Sessioni attive chiuse: {count}",
+				"detailCatalog": "Gli esami che ha creato restano nel catalogo, senza autore.",
+				"confirm": "Sì, elimina l'utente"
+			}
+		},
+		"exams": {
+			"title": "Catalogo esami",
+			"count": "Esami nel catalogo: {count}",
+			"countSearch": "Risultati per \"{q}\": {count}",
+			"searchLabel": "Cerca per nome dell'esame",
+			"empty": "Il catalogo è vuoto: gli esami compaiono quando uno studente li crea dal calendario o dall'importazione.",
+			"emptySearch": "Nessun esame corrisponde alla ricerca. Prova con una parte del nome.",
+			"deletedUser": "Utente eliminato",
+			"columns": {
+				"name": "Esame",
+				"cfu": "CFU",
+				"creator": "Creato da",
+				"userExams": "Libretti",
+				"attempts": "Tentativi"
+			}
+		},
+		"exam": {
+			"back": "Tutto il catalogo",
+			"option": "{name} ({cfu} CFU)",
+			"fields": {
+				"creator": "Creato da",
+				"createdAt": "Creato il",
+				"userExams": "Libretti che lo contengono",
+				"attempts": "Tentativi registrati"
+			},
+			"edit": {
+				"title": "Modifica esame",
+				"name": "Nome",
+				"cfu": "CFU",
+				"submit": "Salva modifiche",
+				"saved": "Modifiche salvate.",
+				"mergeHint": "Per riunire i due esami usa \"Unisci a un altro esame\" qui sotto: l'esame già esistente è selezionato."
+			},
+			"merge": {
+				"title": "Unisci a un altro esame",
+				"text": "Per i doppioni: libretti e tentativi di questo esame passano all'esame scelto, poi questo esame viene eliminato.",
+				"target": "Esame in cui unirlo",
+				"choose": "Scegli un esame",
+				"submit": "Unisci",
+				"question": "Unire {source} in {target}?",
+				"questionNoTarget": "Scegli prima l'esame in cui unirlo.",
+				"detailUserExams": "Libretti spostati: {count}. Chi aveva già entrambi gli esami tiene appello e docente dell'esame scelto.",
+				"detailAttempts": "Tentativi spostati: {count}",
+				"detailDelete": "{name} viene eliminato dal catalogo.",
+				"detailConflict": "Se uno studente ha superato entrambi gli esami l'unione viene bloccata.",
+				"confirm": "Sì, unisci",
+				"none": "Nel catalogo non ci sono altri esami con cui unirlo."
+			},
+			"delete": {
+				"title": "Elimina esame",
+				"text": "L'esame sparisce dal catalogo e dai libretti di tutti gli studenti, con i loro tentativi. L'operazione non si può annullare.",
+				"submit": "Elimina esame",
+				"question": "Eliminare {name} dal catalogo?",
+				"detailUserExams": "Voci di libretto eliminate: {count}",
+				"detailAttempts": "Tentativi eliminati: {count}",
+				"confirm": "Sì, elimina l'esame"
+			}
+		},
+		"errors": {
+			"generic": "Operazione non riuscita per un errore del server. Riprova tra poco.",
+			"userNotFound": "Utente non trovato: potrebbe essere stato eliminato. Torna all'elenco degli utenti.",
+			"examNotFound": "Esame non trovato: potrebbe essere stato eliminato o unito a un altro. Torna al catalogo.",
+			"targetNotFound": "L'esame scelto per l'unione non esiste più. Scegline un altro.",
+			"targetRequired": "Scegli l'esame in cui unire questo.",
+			"mergeSame": "Un esame non si può unire a se stesso: scegline un altro.",
+			"mergeConflict": "Unione bloccata: questi studenti hanno superato entrambi gli esami. Elimina uno dei due superamenti dal loro libretto e riprova.",
+			"selfRole": "Non puoi cambiare il tuo ruolo.",
+			"selfDelete": "Non puoi eliminare il tuo account dal pannello.",
+			"roleInvalid": "Ruolo non valido.",
+			"nameRequired": "Inserisci il nome dell'esame.",
+			"nameTooLong": "Il nome può avere al massimo {max} caratteri.",
+			"cfuInvalid": "I CFU devono essere un numero intero da {min} a {max}.",
+			"duplicate": "Esiste già {name} ({cfu} CFU) nel catalogo."
+		}
 	}
 }

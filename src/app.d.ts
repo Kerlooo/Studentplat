@@ -7,6 +7,7 @@ declare global {
 			email: string;
 			name: string;
 			nickname: string | null;
+			role: 'user' | 'admin';
 		}
 		// interface Error {}
 		interface Locals {
