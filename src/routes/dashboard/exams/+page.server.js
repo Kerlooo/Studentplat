@@ -1,8 +1,9 @@
 import { fail } from '@sveltejs/kit';
 import { requireUser } from '#lib/server/auth.js';
-import { deleteAttempt, getTranscript, setTeacher } from '#lib/server/exams.js';
+import { deleteAttempt, getTranscript, setDifficulty, setTeacher } from '#lib/server/exams.js';
 import { parseId, str, today } from '#lib/server/form.js';
 import { TEACHER_MAX } from '#lib/grade-rules.js';
+import { parseDifficulty } from '#lib/difficulty-rules.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
@@ -33,6 +34,26 @@ export const actions = {
 		} catch (err) {
 			console.error(err);
 			return fail(500, { userExamId, teacher, teacherError: 'transcript.errors.generic' });
+		}
+	},
+
+	difficulty: async ({ request, locals }) => {
+		const user = requireUser(locals);
+		const data = await request.formData();
+		const userExamId = parseId(data.get('userExamId'));
+		const difficulty = parseDifficulty(data.get('difficulty'));
+
+		if (userExamId === null) return fail(400, { error: 'transcript.errors.examNotFound' });
+		if (difficulty === undefined)
+			return fail(400, { userExamId, difficultyError: 'difficulty.errors.invalid' });
+
+		try {
+			const done = await setDifficulty(user.id, userExamId, difficulty);
+			if (!done) return fail(404, { error: 'transcript.errors.examNotFound' });
+			return { action: 'difficulty', userExamId };
+		} catch (err) {
+			console.error(err);
+			return fail(500, { userExamId, difficultyError: 'difficulty.errors.generic' });
 		}
 	},
 

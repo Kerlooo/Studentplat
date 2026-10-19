@@ -8,11 +8,13 @@
 		examSearchKey,
 		normalizeExamName
 	} from '#lib/exam-rules.js';
+	import DifficultySelect from './DifficultySelect.svelte';
 	import FormField from './FormField.svelte';
 
 	/**
 	 * Form per creare un esame nel catalogo condiviso e fissarlo nel giorno `date`.
 	 * Prima dell'invio segnala gli esami con lo stesso nome gia' presenti.
+	 * La difficolta' e' facoltativa: vuota lascia quella gia' salvata (esame riusato).
 	 *
 	 * @type {{
 	 * 	date: string,
@@ -109,6 +111,11 @@
 		max={EXAM_CFU_MAX}
 		step="1"
 		required
+	/>
+	<DifficultySelect
+		id="create-exam-difficulty"
+		hint={t('difficulty.keepHint')}
+		error={errors.difficulty}
 	/>
 
 	<!-- Avviso sui doppioni, letto dagli screen reader mentre si scrive -->

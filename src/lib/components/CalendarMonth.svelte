@@ -1,10 +1,12 @@
 <script module>
 	/**
 	 * Esame mostrato in un giorno; `outcome` e' l'esito registrato quel giorno, se c'e'.
+	 * `difficulty` e' la difficolta' personale (null = non indicata).
 	 * @typedef {{
 	 * 	id: number,
 	 * 	name: string,
 	 * 	cfu: number,
+	 * 	difficulty?: import('#lib/difficulty-rules.js').Difficulty | null,
 	 * 	outcome: { grade: number | null, rejected: boolean } | null,
 	 * }} CalendarExam
 	 */
@@ -21,6 +23,7 @@
 	 * Ogni giorno e' un pulsante che chiama `onselect` con la data ISO.
 	 * Un esame con esito mostra il voto al posto dei CFU e la classe dell'esito
 	 * (`is-passed`, `is-failed`, `is-rejected`, `is-withdrawn`).
+	 * Con una difficolta' indicata riceve anche `has-difficulty is-difficulty-<livello>`.
 	 *
 	 * @type {{
 	 * 	month: { year: number, month: number },
@@ -90,9 +93,18 @@
 											<span
 												class="calendar-day-exam {exam.outcome
 													? `has-outcome is-${attemptOutcome(exam.outcome)}`
+													: ''} {exam.difficulty
+													? `has-difficulty is-difficulty-${exam.difficulty}`
 													: ''}"
 											>
 												<span class="calendar-day-exam-name">{exam.name}</span>
+												{#if exam.difficulty}
+													<span class="visually-hidden"
+														>{t('difficulty.srPrefix', {
+															level: t(`difficulty.${exam.difficulty}`).toLowerCase()
+														})}</span
+													>
+												{/if}
 												{#if exam.outcome}
 													<span class="calendar-day-exam-grade">
 														<GradeBadge
@@ -285,6 +297,58 @@
 		background: var(--color-text-muted);
 	}
 
+	/*
+	 * Difficolta' sul punto di smartphone: un trattino colorato sotto il segno dell'esito,
+	 * che resta intatto. La lunghezza segue le tacche di DifficultyBadge
+	 * (Facile 1/3, Media 2/3, Difficile tutto il punto): il livello si legge anche
+	 * senza distinguere i colori, e il trattino non si confonde con il cerchio rosso
+	 * di "non superato".
+	 */
+	.calendar-day-exam.is-difficulty-easy {
+		--difficulty-color: var(--color-difficulty-easy);
+		--difficulty-fill: 3px;
+	}
+
+	.calendar-day-exam.is-difficulty-medium {
+		--difficulty-color: var(--color-difficulty-medium);
+		--difficulty-fill: 5px;
+	}
+
+	.calendar-day-exam.is-difficulty-hard {
+		--difficulty-color: var(--color-difficulty-hard);
+		--difficulty-fill: 8px;
+	}
+
+	.calendar-day-exam.has-difficulty {
+		/* Spessore del contorno dei segni vuoti: il trattino parte dal bordo esterno */
+		--dot-border: 0px;
+
+		position: relative;
+		/* Spazio per il trattino, cosi' non tocca i punti della riga sotto */
+		margin-bottom: 5px;
+	}
+
+	.calendar-day-exam.is-failed.has-difficulty,
+	.calendar-day-exam.is-rejected.has-difficulty {
+		--dot-border: 2px;
+	}
+
+	.calendar-day-exam.has-difficulty::after {
+		content: '';
+		position: absolute;
+		top: calc(100% + var(--dot-border) + 2px);
+		left: calc(-1 * var(--dot-border));
+		width: var(--difficulty-fill);
+		height: 3px;
+		border-radius: 1px;
+		background: var(--difficulty-color);
+	}
+
+	/* Ritirato: il segno e' un trattino di 2px centrato, il micro-segno resta alla stessa distanza */
+	.calendar-day-exam.is-withdrawn.has-difficulty::after {
+		top: calc(100% + 5px);
+	}
+
 	.calendar-day-exam-name,
 	.calendar-day-exam-cfu,
 	.calendar-day-exam-grade {
@@ -376,6 +440,47 @@
 			border-left: 3px dotted var(--color-text-muted);
 			border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 			background: color-mix(in srgb, var(--color-rule) 70%, transparent);
+		}
+
+		/*
+		 * Difficolta': fascia interna di 4px a sinistra, accanto al filetto dell'esito
+		 * che resta invariato. Il trattino dello smartphone non serve piu'.
+		 */
+		.calendar-day-exam.has-difficulty {
+			margin-bottom: 0;
+			padding-inline-start: calc(var(--space-2) + 2px);
+			box-shadow: inset 4px 0 0 var(--difficulty-color);
+		}
+
+		.calendar-day-exam.has-difficulty::after {
+			content: none;
+		}
+	}
+
+	/*
+	 * Contrasto elevato: i colori di sistema cancellano fondi e ombre.
+	 * Smartphone: il trattino resta, in CanvasText, con le sue tre lunghezze.
+	 * Da 40rem la fascia diventa un bordo destro in CanvasText con un tratto per
+	 * livello (punteggiato, tratteggiato, pieno), distinto dal filetto dell'esito a sinistra.
+	 */
+	@media (forced-colors: active) {
+		.calendar-day-exam.has-difficulty::after {
+			forced-color-adjust: none;
+			background: CanvasText;
+		}
+	}
+
+	@media (forced-colors: active) and (min-width: 40rem) {
+		.calendar-day-exam.has-difficulty {
+			border-right: 4px solid CanvasText;
+		}
+
+		.calendar-day-exam.is-difficulty-easy {
+			border-right-style: dotted;
+		}
+
+		.calendar-day-exam.is-difficulty-medium {
+			border-right-style: dashed;
 		}
 	}
 </style>

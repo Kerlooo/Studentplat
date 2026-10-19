@@ -13,6 +13,7 @@ import { parseId, str, today } from '#lib/server/form.js';
 import { formatMonth, isIsoDate, parseMonth } from '#lib/calendar.js';
 import { EXAM_CFU_MAX, EXAM_CFU_MIN, EXAM_NAME_MAX, normalizeExamName } from '#lib/exam-rules.js';
 import { NOTES_MAX, isSufficient, parseGradeField } from '#lib/grade-rules.js';
+import { parseDifficulty } from '#lib/difficulty-rules.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, url }) {
@@ -39,9 +40,10 @@ export async function load({ locals, url }) {
  * @param {number} userId
  * @param {{ id: number, name: string, cfu: number }} exam
  * @param {string} date
+ * @param {import('#lib/difficulty-rules.js').Difficulty | null} difficulty null = lascia quella esistente
  */
-async function schedule(userId, exam, date) {
-	const { status, previousDate } = await scheduleExam(userId, exam.id, date);
+async function schedule(userId, exam, date, difficulty) {
+	const { status, previousDate } = await scheduleExam(userId, exam.id, date, difficulty);
 	if (status === 'passed') return null;
 	return { status, previousDate, exam: { id: exam.id, name: exam.name, cfu: exam.cfu }, date };
 }
@@ -57,14 +59,16 @@ export const actions = {
 		const data = await request.formData();
 		const date = str(data.get('date'));
 		const examId = parseId(data.get('examId'));
+		const difficulty = parseDifficulty(data.get('difficulty'));
 
 		if (!isIsoDate(date)) return fail(400, { error: 'calendar.errors.invalidDate' });
 		if (examId === null) return fail(400, { error: 'calendar.errors.examNotFound' });
+		if (difficulty === undefined) return fail(400, { error: 'difficulty.errors.invalid' });
 
 		try {
 			const exam = await getExam(examId);
 			if (!exam) return fail(404, { error: 'calendar.errors.examNotFound' });
-			const scheduled = await schedule(user.id, exam, date);
+			const scheduled = await schedule(user.id, exam, date, difficulty);
 			if (!scheduled) return alreadyPassed(exam);
 			return { action: 'add', ...scheduled };
 		} catch (err) {
@@ -77,7 +81,12 @@ export const actions = {
 		const user = requireUser(locals);
 		const data = await request.formData();
 		const date = str(data.get('date'));
-		const values = { name: normalizeExamName(str(data.get('name'))), cfu: str(data.get('cfu')) };
+		const values = {
+			name: normalizeExamName(str(data.get('name'))),
+			cfu: str(data.get('cfu')),
+			difficulty: str(data.get('difficulty'))
+		};
+		const difficulty = parseDifficulty(values.difficulty);
 
 		if (!isIsoDate(date)) return fail(400, { error: 'calendar.errors.invalidDate', values });
 
@@ -89,12 +98,14 @@ export const actions = {
 		const cfu = /^\d{1,2}$/.test(values.cfu) ? Number(values.cfu) : NaN;
 		if (!Number.isInteger(cfu) || cfu < EXAM_CFU_MIN || cfu > EXAM_CFU_MAX)
 			errors.cfu = 'calendar.errors.cfuInvalid';
+		if (difficulty === undefined) errors.difficulty = 'difficulty.errors.invalid';
 
-		if (Object.keys(errors).length > 0) return fail(400, { errors, values });
+		if (difficulty === undefined || Object.keys(errors).length > 0)
+			return fail(400, { errors, values });
 
 		try {
 			const exam = await createExam(user.id, values.name, cfu);
-			const scheduled = await schedule(user.id, exam, date);
+			const scheduled = await schedule(user.id, exam, date, difficulty);
 			if (!scheduled) return alreadyPassed(exam);
 			return { action: 'create', reused: exam.reused, ...scheduled };
 		} catch (err) {

@@ -422,6 +422,7 @@
 			"grade": "voto da 1 a 30, \"30L\" o 31 per il 30 e lode, null se ritirato o assente",
 			"rejected": "facoltativo, true se hai rifiutato un voto sufficiente",
 			"teacher": "facoltativo, docente dell'esame (al massimo {teacherMax} caratteri)",
+			"difficulty": "facoltativa, difficoltà per te: \"easy\", \"medium\", \"hard\" o null",
 			"notes": "facoltative, al massimo {notesMax} caratteri"
 		},
 		"example": "Esempio del formato",
@@ -452,7 +453,8 @@
 			"notesInvalid": "le note devono essere un testo di al massimo {max} caratteri",
 			"passedTwice": "{name} risulta superato anche alla riga {other}",
 			"alreadyPassed": "{name} è già superato nel tuo libretto",
-			"generic": "Non è stato possibile importare. Riprova."
+			"generic": "Non è stato possibile importare. Riprova.",
+			"difficultyInvalid": "la difficoltà deve essere \"easy\", \"medium\", \"hard\" o null"
 		},
 		"back": "Torna al profilo"
 	},
@@ -631,6 +633,23 @@
 			"nameTooLong": "Il nome può avere al massimo {max} caratteri.",
 			"cfuInvalid": "I CFU devono essere un numero intero da {min} a {max}.",
 			"duplicate": "Esiste già {name} ({cfu} CFU) nel catalogo."
+		}
+	},
+	"difficulty": {
+		"label": "Difficoltà",
+		"labelFor": "Difficoltà di {name}",
+		"none": "Non indicata",
+		"easy": "Facile",
+		"medium": "Media",
+		"hard": "Difficile",
+		"hint": "Facoltativa, la vedi solo tu. Scegli «Non indicata» per toglierla.",
+		"keepHint": "Difficoltà facoltativa: se non la indichi resta quella già salvata.",
+		"submit": "Salva difficoltà",
+		"saved": "Difficoltà salvata.",
+		"srPrefix": "difficoltà: {level}",
+		"errors": {
+			"invalid": "Scegli una difficoltà tra Facile, Media e Difficile, oppure Non indicata.",
+			"generic": "Non è stato possibile salvare la difficoltà. Riprova."
 		}
 	}
 }

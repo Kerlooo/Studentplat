@@ -77,3 +77,7 @@ ALTER TABLE user_exams
 ALTER TABLE users
 	ADD COLUMN IF NOT EXISTS role ENUM('user','admin') NOT NULL DEFAULT 'user',
 	ADD COLUMN IF NOT EXISTS last_login_at DATETIME NULL;
+
+-- Difficolta' personale dell'esame del libretto (NULL = non indicata)
+ALTER TABLE user_exams
+	ADD COLUMN IF NOT EXISTS difficulty ENUM('easy','medium','hard') NULL AFTER teacher;

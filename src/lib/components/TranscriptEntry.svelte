@@ -3,13 +3,15 @@
 	import { getDateFormat, getT } from '#lib/i18n/context.js';
 	import { isoToUtcDate } from '#lib/calendar.js';
 	import AttemptList from './AttemptList.svelte';
+	import DifficultyBadge from './DifficultyBadge.svelte';
+	import DifficultyForm from './DifficultyForm.svelte';
 	import GradeBadge from './GradeBadge.svelte';
 	import TeacherForm from './TeacherForm.svelte';
 
 	/**
 	 * Riga del libretto espandibile (`<details>`, funziona anche senza JavaScript):
-	 * nel riepilogo nome, CFU, stato, appello, docente e numero di tentativi;
-	 * nel dettaglio docente modificabile, storico dei tentativi e link al calendario.
+	 * nel riepilogo nome, CFU, stato, appello, docente, difficolta' e numero di tentativi;
+	 * nel dettaglio docente e difficolta' modificabili, storico dei tentativi e link al calendario.
 	 *
 	 * @type {{
 	 * 	exam: import('#lib/server/exams.js').TranscriptExam,
@@ -18,6 +20,8 @@
 	 * 	teacherValue?: string,
 	 * 	teacherError?: string,
 	 * 	teacherSaved?: boolean,
+	 * 	difficultyError?: string,
+	 * 	difficultySaved?: boolean,
 	 * 	confirmId?: number | null,
 	 * }}
 	 */
@@ -28,6 +32,8 @@
 		teacherValue,
 		teacherError,
 		teacherSaved = false,
+		difficultyError,
+		difficultySaved = false,
 		confirmId = null
 	} = $props();
 
@@ -87,6 +93,9 @@
 			{#if exam.teacher}
 				<span>{t('transcript.teacherShort', { name: exam.teacher })}</span>
 			{/if}
+			{#if exam.difficulty}
+				<DifficultyBadge difficulty={exam.difficulty} />
+			{/if}
 			<span>
 				{attemptsCount === 0
 					? t('transcript.attemptsNone')
@@ -102,14 +111,24 @@
 			<p class="transcript-entry-notice" role="status">{notice}</p>
 		{/if}
 
-		<TeacherForm
-			userExamId={exam.userExamId}
-			value={teacherValue ?? exam.teacher ?? ''}
-			action="?/teacher"
-			{idPrefix}
-			error={teacherError}
-			saved={teacherSaved}
-		/>
+		<div class="transcript-entry-forms">
+			<TeacherForm
+				userExamId={exam.userExamId}
+				value={teacherValue ?? exam.teacher ?? ''}
+				action="?/teacher"
+				{idPrefix}
+				error={teacherError}
+				saved={teacherSaved}
+			/>
+			<DifficultyForm
+				userExamId={exam.userExamId}
+				value={exam.difficulty}
+				action="?/difficulty"
+				{idPrefix}
+				error={difficultyError}
+				saved={difficultySaved}
+			/>
+		</div>
 
 		<section class="transcript-entry-attempts" aria-labelledby="{idPrefix}-attempts">
 			<h3 class="transcript-entry-heading" id="{idPrefix}-attempts">
@@ -311,6 +330,33 @@
 		from {
 			opacity: 0;
 			transform: translateY(-0.25rem);
+		}
+	}
+
+	/*
+	 * Docente e difficolta' affiancati quando c'e' spazio (due colonne da circa 32rem),
+	 * uno sotto l'altro su smartphone. Con subgrid ogni form occupa due righe condivise
+	 * (campo con suggerimento, pulsante): i pulsanti restano allineati anche se i
+	 * suggerimenti vanno a capo in modo diverso.
+	 */
+	.transcript-entry-forms {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+		align-items: start;
+		gap: var(--space-5) var(--space-8);
+	}
+
+	.transcript-entry-forms > :global(form) {
+		max-width: none;
+		min-width: 0;
+	}
+
+	@supports (grid-template-rows: subgrid) {
+		.transcript-entry-forms > :global(form) {
+			display: grid;
+			grid-row: span 2;
+			grid-template-rows: subgrid;
+			row-gap: var(--space-3);
 		}
 	}
 

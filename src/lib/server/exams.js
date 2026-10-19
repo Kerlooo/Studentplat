@@ -17,11 +17,13 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  * 	cfu: number,
  * 	userExamId: number | null,
  * 	plannedDate: string | null,
+ * 	difficulty: Difficulty | null,
  * 	passed: { date: string, grade: number } | null,
  * }} CatalogExam
  */
 
 /** @typedef {import('#lib/grade-rules.js').Attempt} Attempt */
+/** @typedef {import('#lib/difficulty-rules.js').Difficulty} Difficulty */
 
 const ATTEMPT_COLUMNS = `a.id, a.user_exam_id, ue.exam_id,
 	DATE_FORMAT(a.attempt_date, '%Y-%m-%d') AS attempt_date, a.grade, a.rejected, a.notes`;
@@ -94,7 +96,7 @@ export async function getCatalogForUser(userId, attempts) {
 	const byUserExam = groupByUserExam(attempts ?? (await getAttemptsForUser(userId)));
 	const [rows] = /** @type {[Rows, unknown]} */ (
 		await db.execute(
-			`SELECT e.id, e.name, e.cfu, ue.id AS user_exam_id,
+			`SELECT e.id, e.name, e.cfu, ue.id AS user_exam_id, ue.difficulty,
 			        DATE_FORMAT(ue.planned_date, '%Y-%m-%d') AS planned_date
 			 FROM exams e
 			 LEFT JOIN user_exams ue ON ue.exam_id = e.id AND ue.user_id = ?
@@ -108,6 +110,7 @@ export async function getCatalogForUser(userId, attempts) {
 		cfu: row.cfu,
 		userExamId: row.user_exam_id ?? null,
 		plannedDate: row.planned_date ?? null,
+		difficulty: row.difficulty ?? null,
 		passed: row.user_exam_id ? passedInfo(byUserExam.get(row.user_exam_id)) : null
 	}));
 }
@@ -156,13 +159,15 @@ export async function createExam(userId, name, cfu) {
 /**
  * Fissa l'appello dell'esame nel libretto dell'utente: lo aggiunge se manca,
  * altrimenti sposta solo la data.
+ * Con una difficolta' la salva sulla voce del libretto; con null lascia quella esistente.
+ * Un esame gia' superato non si sposta piu': in quel caso non scrive nulla.
  * @param {number} userId
  * @param {number} examId
  * @param {string} date `YYYY-MM-DD`
- * Un esame gia' superato non si sposta piu': in quel caso non scrive nulla.
+ * @param {Difficulty | null} [difficulty]
  * @returns {Promise<{ status: 'added' | 'moved' | 'unchanged' | 'passed', previousDate: string | null }>}
  */
-export async function scheduleExam(userId, examId, date) {
+export async function scheduleExam(userId, examId, date, difficulty = null) {
 	const [rows] = /** @type {[Rows, unknown]} */ (
 		await db.execute(
 			`SELECT DATE_FORMAT(ue.planned_date, '%Y-%m-%d') AS planned_date,
@@ -176,10 +181,12 @@ export async function scheduleExam(userId, examId, date) {
 	if (existing?.passed) return { status: 'passed', previousDate: existing.planned_date ?? null };
 
 	// ON DUPLICATE KEY copre anche una richiesta concorrente arrivata tra SELECT e INSERT
+	// COALESCE: senza una difficolta' scelta resta quella gia' salvata
 	await db.execute(
-		`INSERT INTO user_exams (user_id, exam_id, planned_date) VALUES (?, ?, ?)
-		 ON DUPLICATE KEY UPDATE planned_date = VALUES(planned_date)`,
-		[userId, examId, date]
+		`INSERT INTO user_exams (user_id, exam_id, planned_date, difficulty) VALUES (?, ?, ?, ?)
+		 ON DUPLICATE KEY UPDATE planned_date = VALUES(planned_date),
+		                         difficulty = COALESCE(VALUES(difficulty), difficulty)`,
+		[userId, examId, date, difficulty]
 	);
 
 	if (!existing) return { status: 'added', previousDate: null };
@@ -212,6 +219,7 @@ export async function unscheduleExam(userId, userExamId) {
  * 	cfu: number,
  * 	plannedDate: string | null,
  * 	teacher: string | null,
+ * 	difficulty: Difficulty | null,
  * 	status: import('#lib/grade-rules.js').ExamStatus,
  * 	passed: { date: string, grade: number } | null,
  * 	attempts: Attempt[],
@@ -226,7 +234,7 @@ export async function unscheduleExam(userId, userExamId) {
 export async function getTranscript(userId) {
 	const [rows] = /** @type {[Rows, unknown]} */ (
 		await db.execute(
-			`SELECT ue.id, ue.exam_id, e.name, e.cfu, ue.teacher,
+			`SELECT ue.id, ue.exam_id, e.name, e.cfu, ue.teacher, ue.difficulty,
 			        DATE_FORMAT(ue.planned_date, '%Y-%m-%d') AS planned_date
 			 FROM user_exams ue JOIN exams e ON e.id = ue.exam_id
 			 WHERE ue.user_id = ?
@@ -246,6 +254,7 @@ export async function getTranscript(userId) {
 			cfu: row.cfu,
 			plannedDate: row.planned_date ?? null,
 			teacher: row.teacher ?? null,
+			difficulty: row.difficulty ?? null,
 			status: examStatus(attempts),
 			passed: passedInfo(attempts),
 			attempts
@@ -372,6 +381,25 @@ export async function setTeacher(userId, userExamId, teacher) {
 }
 
 /**
+ * Imposta (o toglie, con null) la difficolta' personale di un esame del libretto.
+ * @param {number} userId
+ * @param {number} userExamId
+ * @param {Difficulty | null} difficulty
+ * @returns {Promise<boolean>} false se la riga non esiste o non e' dell'utente
+ */
+export async function setDifficulty(userId, userExamId, difficulty) {
+	// mysql2 usa FOUND_ROWS: affectedRows conta la riga anche se il valore non cambia
+	const [result] = /** @type {[Result, unknown]} */ (
+		await db.execute('UPDATE user_exams SET difficulty = ? WHERE id = ? AND user_id = ?', [
+			difficulty,
+			userExamId,
+			userId
+		])
+	);
+	return result.affectedRows > 0;
+}
+
+/**
  * Elemento d'importazione gia' validato (vedi `exam-import.js`); `row` parte da 1.
  * @typedef {{
  * 	row: number,
@@ -381,6 +409,7 @@ export async function setTeacher(userId, userExamId, teacher) {
  * 	grade: number | null,
  * 	rejected: boolean,
  * 	teacher: string | null,
+ * 	difficulty: Difficulty | null,
  * 	notes: string | null,
  * }} ImportEntry
  */
@@ -419,6 +448,8 @@ export async function importAttempts(userId, entries) {
 		const inserts = [];
 		/** @type {{ userExamId: number, teacher: string }[]} */
 		const teachers = [];
+		/** @type {{ userExamId: number, difficulty: Difficulty }[]} */
+		const difficulties = [];
 
 		for (const group of groups.values()) {
 			const { name, cfu } = group[0];
@@ -506,6 +537,8 @@ export async function importAttempts(userId, entries) {
 
 			const teacher = group.findLast((entry) => entry.teacher)?.teacher;
 			if (teacher) teachers.push({ userExamId, teacher });
+			const difficulty = group.findLast((entry) => entry.difficulty)?.difficulty;
+			if (difficulty) difficulties.push({ userExamId, difficulty });
 		}
 
 		if (errors.length > 0) {
@@ -523,6 +556,13 @@ export async function importAttempts(userId, entries) {
 		for (const { userExamId, teacher } of teachers) {
 			await conn.execute('UPDATE user_exams SET teacher = ? WHERE id = ? AND user_id = ?', [
 				teacher,
+				userExamId,
+				userId
+			]);
+		}
+		for (const { userExamId, difficulty } of difficulties) {
+			await conn.execute('UPDATE user_exams SET difficulty = ? WHERE id = ? AND user_id = ?', [
+				difficulty,
 				userExamId,
 				userId
 			]);

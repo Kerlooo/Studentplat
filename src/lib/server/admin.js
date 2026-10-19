@@ -470,7 +470,8 @@ export async function mergeExams(sourceId, targetId) {
 
 		const [entries] = /** @type {[Rows, unknown]} */ (
 			await conn.execute(
-				`SELECT id, user_id, exam_id, DATE_FORMAT(planned_date, '%Y-%m-%d') AS planned_date, teacher
+				`SELECT id, user_id, exam_id, DATE_FORMAT(planned_date, '%Y-%m-%d') AS planned_date, teacher,
+				        difficulty
 				 FROM user_exams WHERE exam_id IN (?, ?) ORDER BY id FOR UPDATE`,
 				[sourceId, targetId]
 			)
@@ -523,9 +524,9 @@ export async function mergeExams(sourceId, targetId) {
 			]);
 			await conn.execute(
 				`UPDATE user_exams SET planned_date = COALESCE(planned_date, ?),
-				        teacher = COALESCE(teacher, ?)
+				        teacher = COALESCE(teacher, ?), difficulty = COALESCE(difficulty, ?)
 				 WHERE id = ?`,
-				[source.planned_date ?? null, source.teacher ?? null, target.id]
+				[source.planned_date ?? null, source.teacher ?? null, source.difficulty ?? null, target.id]
 			);
 			await conn.execute('DELETE FROM user_exams WHERE id = ?', [source.id]);
 		}

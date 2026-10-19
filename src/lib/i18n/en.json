@@ -422,6 +422,7 @@
 			"grade": "grade from 1 to 30, \"30L\" or 31 for 30 cum laude, null if withdrawn or absent",
 			"rejected": "optional, true if you declined a pass grade",
 			"teacher": "optional, the exam's lecturer (up to {teacherMax} characters)",
+			"difficulty": "optional, how hard the exam is for you: \"easy\", \"medium\", \"hard\" or null",
 			"notes": "optional, up to {notesMax} characters"
 		},
 		"example": "Format example",
@@ -452,7 +453,8 @@
 			"notesInvalid": "notes must be text of up to {max} characters",
 			"passedTwice": "{name} is also marked as passed in row {other}",
 			"alreadyPassed": "{name} is already marked as passed in your transcript",
-			"generic": "Couldn't import. Please try again."
+			"generic": "Couldn't import. Please try again.",
+			"difficultyInvalid": "difficulty must be \"easy\", \"medium\", \"hard\" or null"
 		},
 		"back": "Back to profile"
 	},
@@ -631,6 +633,23 @@
 			"nameTooLong": "The name can be at most {max} characters.",
 			"cfuInvalid": "Credits must be a whole number from {min} to {max}.",
 			"duplicate": "{name} ({cfu} credits) is already in the catalogue."
+		}
+	},
+	"difficulty": {
+		"label": "Difficulty",
+		"labelFor": "Difficulty of {name}",
+		"none": "Not set",
+		"easy": "Easy",
+		"medium": "Medium",
+		"hard": "Hard",
+		"hint": "Optional, only you can see it. Choose “Not set” to remove it.",
+		"keepHint": "Difficulty is optional: if you leave it out, the one already saved stays.",
+		"submit": "Save difficulty",
+		"saved": "Difficulty saved.",
+		"srPrefix": "difficulty: {level}",
+		"errors": {
+			"invalid": "Choose a difficulty among Easy, Medium and Hard, or Not set.",
+			"generic": "The difficulty could not be saved. Try again."
 		}
 	}
 }

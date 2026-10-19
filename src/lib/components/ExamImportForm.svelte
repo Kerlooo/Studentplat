@@ -63,6 +63,7 @@
 		'grade',
 		'rejected',
 		'teacher',
+		'difficulty',
 		'notes'
 	]);
 </script>

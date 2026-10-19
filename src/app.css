@@ -29,6 +29,10 @@
 	--color-danger: #b42318;
 	--color-danger-soft: #fdecea;
 	--color-on-danger: #ffffff;
+	/* Difficolta' personale: solo fasce, bordi e pallini, mai testo (contrasto >= 3:1 sulla pagina) */
+	--color-difficulty-easy: #2e8540;
+	--color-difficulty-medium: #b8860b;
+	--color-difficulty-hard: #e03e52;
 	--color-field: #ffffff;
 	--color-field-border: #6a7690;
 	--color-focus: #1a3daa;
@@ -129,6 +133,9 @@
 		--color-danger: #ffa395;
 		--color-danger-soft: #3a2232;
 		--color-on-danger: #1b2233;
+		--color-difficulty-easy: #6fcf8b;
+		--color-difficulty-medium: #f2c14e;
+		--color-difficulty-hard: #ff6b81;
 		--color-field: #131c36;
 		--color-field-border: #7c89a8;
 		--color-focus: #c2d2ff;

@@ -40,7 +40,9 @@
 			confirmId: own ? confirmId : null,
 			teacherValue: own && form && 'teacher' in form ? form.teacher : undefined,
 			teacherError: own && form && 'teacherError' in form ? form.teacherError : undefined,
-			teacherSaved: own && !!form && 'action' in form && form.action === 'teacher'
+			teacherSaved: own && !!form && 'action' in form && form.action === 'teacher',
+			difficultyError: own && form && 'difficultyError' in form ? form.difficultyError : undefined,
+			difficultySaved: own && !!form && 'action' in form && form.action === 'difficulty'
 		};
 	}
 </script>

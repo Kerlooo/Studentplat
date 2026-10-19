@@ -8,6 +8,7 @@ import {
 	parseGradeJson
 } from '#lib/grade-rules.js';
 import { IMPORT_MAX_BYTES, IMPORT_MAX_ITEMS } from '#lib/import-rules.js';
+import { parseDifficulty } from '#lib/difficulty-rules.js';
 
 /** @typedef {import('./exams.js').ImportEntry} ImportEntry */
 /** @typedef {import('./exams.js').ImportError} ImportError */
@@ -100,6 +101,9 @@ export function parseImport(text, today) {
 		else if (teacher && teacher.length > TEACHER_MAX)
 			add('import.errors.teacherInvalid', { max: TEACHER_MAX });
 
+		const difficulty = parseDifficulty(raw.difficulty);
+		if (difficulty === undefined) add('import.errors.difficultyInvalid');
+
 		const notes = optionalText(raw.notes);
 		if (notes === undefined) add('import.errors.notesInvalid', { max: NOTES_MAX });
 		else if (notes && notes.length > NOTES_MAX)
@@ -114,6 +118,7 @@ export function parseImport(text, today) {
 			grade: /** @type {number | null} */ (grade),
 			rejected: /** @type {boolean} */ (rejected),
 			teacher: teacher ?? null,
+			difficulty: difficulty ?? null,
 			notes: notes ?? null
 		});
 	});

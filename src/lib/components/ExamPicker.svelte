@@ -8,6 +8,8 @@
 	import AttemptForm from './AttemptForm.svelte';
 	import AttemptList from './AttemptList.svelte';
 	import CreateExamForm from './CreateExamForm.svelte';
+	import DifficultyBadge from './DifficultyBadge.svelte';
+	import DifficultySelect from './DifficultySelect.svelte';
 
 	/**
 	 * Contenuto del popup di un giorno: esami del giorno (fissati o con un esito registrato)
@@ -207,6 +209,11 @@
 					<li class="exam-list-item" class:is-passed={!!exam.passed}>
 						<span class="exam-list-name">{exam.name}</span>
 						<span class="exam-list-cfu">{t('calendar.cfuShort', { cfu: exam.cfu })}</span>
+						{#if exam.difficulty}
+							<span class="exam-list-difficulty"
+								><DifficultyBadge difficulty={exam.difficulty} /></span
+							>
+						{/if}
 						<!-- Superato in un altro giorno: lo si dice qui; se e' oggi lo mostra gia' l'elenco degli esiti -->
 						{#if exam.passed && exam.passed.date !== date}
 							<span class="exam-list-status">{passedText(exam.passed)}</span>
@@ -287,6 +294,7 @@
 	<section class="exam-picker-section" aria-labelledby="{headingId}-catalog">
 		<h3 class="exam-picker-heading" id="{headingId}-catalog">{t('calendar.picker.catalog')}</h3>
 		<p class="exam-picker-hint">{t('calendar.picker.catalogHint')}</p>
+		<p class="exam-picker-hint" id="{headingId}-difficulty-hint">{t('difficulty.keepHint')}</p>
 
 		<div class="exam-search" role="search">
 			<label class="exam-search-label" for="{headingId}-search">{t('calendar.picker.search')}</label
@@ -328,6 +336,16 @@
 						>
 							<input type="hidden" name="date" value={date} />
 							<input type="hidden" name="examId" value={exam.id} />
+							{#if !exam.passed}
+								<!-- Vuoto = lascia la difficolta' gia' salvata -->
+								<DifficultySelect
+									id="{headingId}-difficulty-{exam.id}"
+									value={exam.difficulty}
+									ariaLabel={t('difficulty.labelFor', { name: exam.name })}
+									describedby="{headingId}-difficulty-hint"
+									disabled={pending}
+								/>
+							{/if}
 							{#if exam.passed}
 								<!-- Esame superato: azione disattivata, il motivo e' nello stato sopra -->
 								<button
@@ -528,6 +546,63 @@
 	.exam-list-action {
 		margin: 0;
 		margin-inline-start: auto;
+	}
+
+	/*
+	 * Fissa/sposta: difficolta' e pulsante sulla stessa riga. Su smartphone la riga
+	 * scende sotto nome e stato e prende tutta la larghezza (il select si allarga);
+	 * da 30rem torna a destra del nome. L'etichetta "Difficolta'" sta a sinistra del
+	 * campo, piccola, cosi' non si ripete come un titolo a ogni riga.
+	 */
+	.exam-list-catalog .exam-list-action {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		flex-basis: 100%;
+		order: 4;
+		min-width: 0;
+		margin-inline-start: 0;
+	}
+
+	.exam-list-catalog .exam-list-action :global(.difficulty-select) {
+		flex: 1 1 auto;
+		flex-direction: row;
+		align-items: center;
+		gap: var(--space-2);
+	}
+
+	.exam-list-catalog .exam-list-action :global(.difficulty-select-label) {
+		font-size: var(--text-sm);
+		font-weight: var(--weight-regular);
+		color: var(--color-text-muted);
+	}
+
+	.exam-list-catalog .exam-list-action :global(.difficulty-select-input) {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.exam-list-catalog .exam-list-action .button {
+		flex: none;
+	}
+
+	@media (min-width: 30rem) {
+		.exam-list-catalog .exam-list-action {
+			flex-basis: auto;
+			order: 0;
+			margin-inline-start: auto;
+		}
+
+		.exam-list-catalog .exam-list-action :global(.difficulty-select-input) {
+			width: 9.5rem;
+			flex: none;
+		}
+	}
+
+	/* Difficolta' degli esami del giorno: piccola, accanto ai CFU */
+	.exam-list-difficulty {
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
 	}
 
 	/* Tentativi, azioni e form "Registra esito" occupano ciascuno una riga intera */
