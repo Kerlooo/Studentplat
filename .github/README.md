@@ -167,4 +167,4 @@ Segnalazioni, idee e pull request sono benvenute: le regole sono in [CONTRIBUTIN
 
 ## Autore
 
-Realizzato da Kerlo (Carlo), studente di Scienze e Tecnologie Informatiche. Segnalazioni e suggerimenti sono benvenuti nelle [issue](https://github.com/Kerlooo/Studentplat/issues).
+Realizzato da kerlo (Carlo), studente di Scienze e Tecnologie Informatiche. Segnalazioni e suggerimenti sono benvenuti nelle [issue](https://github.com/Kerlooo/Studentplat/issues).

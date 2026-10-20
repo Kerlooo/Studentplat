@@ -167,4 +167,4 @@ Bug reports, ideas and pull requests are welcome: the rules are in [CONTRIBUTING
 
 ## Author
 
-Made by Kerlo (Carlo), a Computer Science and Technology student. Bug reports and suggestions are welcome in the [issues](https://github.com/Kerlooo/Studentplat/issues).
+Made by kerlo (Carlo), a Computer Science and Technology student. Bug reports and suggestions are welcome in the [issues](https://github.com/Kerlooo/Studentplat/issues).
