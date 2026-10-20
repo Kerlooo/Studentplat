@@ -124,7 +124,8 @@
 			"passwordTooShort": "Password must be at least {min} characters long.",
 			"passwordTooLong": "Password can't be longer than {max} characters.",
 			"passwordMismatch": "Passwords do not match.",
-			"generic": "Something went wrong. Please try again."
+			"generic": "Something went wrong. Please try again.",
+			"tooManyAttempts": "Too many attempts. Try again in a few minutes."
 		}
 	},
 	"dashboard": {

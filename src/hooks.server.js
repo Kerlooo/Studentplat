@@ -6,6 +6,13 @@ import {
 	validateSession
 } from '#lib/server/auth.js';
 
+/** Header aggiunti a ogni response. */
+const SECURITY_HEADERS = {
+	'X-Content-Type-Options': 'nosniff',
+	'X-Frame-Options': 'DENY',
+	'Referrer-Policy': 'same-origin'
+};
+
 /** @type {import('@sveltejs/kit/hooks').Handle} */
 export async function handle({ event, resolve }) {
 	const lang = event.cookies.get('lang');
@@ -23,7 +30,18 @@ export async function handle({ event, resolve }) {
 		}
 	}
 
-	return resolve(event, {
+	const response = await resolve(event, {
 		transformPageChunk: ({ html }) => html.replace('%lang%', event.locals.lang)
 	});
+
+	// header di sicurezza (la CSP la genera SvelteKit, vedi `csp` in vite.config.js);
+	// try/catch perché alcune response, ad esempio da fetch, hanno header immutabili
+	try {
+		for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+			response.headers.set(name, value);
+		}
+	} catch {
+		// header non modificabili: si lascia la response com'è
+	}
+	return response;
 }

@@ -7,6 +7,7 @@ import {
 	setSessionCookie,
 	verifyPassword
 } from '#lib/server/auth.js';
+import { createRateLimiter } from '#lib/server/rate-limit.js';
 import { EMAIL_MAX, NAME_MAX, PASSWORD_MAX, PASSWORD_MIN } from '#lib/auth-rules.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -14,6 +15,22 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Hash fittizio: se l'email non esiste si verifica comunque una password,
 // così i tempi di risposta non rivelano quali email sono registrate.
 const dummyHash = hashPassword('dummy-password-for-timing');
+
+const MINUTE = 60 * 1000;
+
+// Limiti contro i tentativi a forza bruta: per il login si contano solo i fallimenti,
+// per la registrazione ogni richiesta che arriva a calcolare l'hash.
+const loginByEmail = createRateLimiter({ max: 5, windowMs: 15 * MINUTE });
+const loginByIp = createRateLimiter({ max: 20, windowMs: 15 * MINUTE });
+const registerByIp = createRateLimiter({ max: 10, windowMs: 60 * MINUTE });
+
+/**
+ * Risposta per chi ha superato il limite di tentativi.
+ * @param {'login' | 'register'} form
+ * @param {Record<string, string>} values
+ */
+const tooManyAttempts = (form, values) =>
+	fail(429, { form, values, errors: { general: 'auth.errors.tooManyAttempts' } });
 
 /** @param {FormDataEntryValue | null} value */
 const str = (value) => (typeof value === 'string' ? value : '');
@@ -25,18 +42,28 @@ export function load({ locals }) {
 
 /** @type {import('./$types').Actions} */
 export const actions = {
-	login: async ({ request, cookies }) => {
+	login: async ({ request, cookies, getClientAddress }) => {
 		const data = await request.formData();
 		const email = str(data.get('email')).trim().toLowerCase();
 		const password = str(data.get('password'));
 		const values = { email };
 
-		const invalid = () =>
-			fail(400, {
+		const ip = getClientAddress();
+
+		// controllo prima di scrypt, per non sprecare CPU sui tentativi bloccati
+		if (loginByIp.isLimited(ip) || (email && loginByEmail.isLimited(email))) {
+			return tooManyAttempts('login', values);
+		}
+
+		const invalid = () => {
+			loginByIp.hit(ip);
+			if (email) loginByEmail.hit(email);
+			return fail(400, {
 				form: /** @type {const} */ ('login'),
 				values,
 				errors: { general: 'auth.errors.invalidCredentials' }
 			});
+		};
 
 		if (!email || !password || password.length > PASSWORD_MAX) return invalid();
 
@@ -47,13 +74,14 @@ export const actions = {
 		const ok = await verifyPassword(password, user ? user.password_hash : await dummyHash);
 		if (!user || !ok) return invalid();
 
+		loginByEmail.reset(email);
 		const { token, expiresAt } = await createSession(user.id);
 		await recordLogin(user.id);
 		setSessionCookie(cookies, token, expiresAt);
 		redirect(303, '/dashboard');
 	},
 
-	register: async ({ request, cookies }) => {
+	register: async ({ request, cookies, getClientAddress }) => {
 		const data = await request.formData();
 		const name = str(data.get('name')).trim();
 		const email = str(data.get('email')).trim().toLowerCase();
@@ -76,6 +104,10 @@ export const actions = {
 		if (Object.keys(errors).length > 0) {
 			return fail(400, { form: /** @type {const} */ ('register'), values, errors });
 		}
+
+		const ip = getClientAddress();
+		if (registerByIp.isLimited(ip)) return tooManyAttempts('register', values);
+		registerByIp.hit(ip);
 
 		let userId;
 		try {

@@ -124,7 +124,8 @@
 			"passwordTooShort": "La password deve avere almeno {min} caratteri.",
 			"passwordTooLong": "La password può avere al massimo {max} caratteri.",
 			"passwordMismatch": "Le password non coincidono.",
-			"generic": "Si è verificato un errore. Riprova."
+			"generic": "Si è verificato un errore. Riprova.",
+			"tooManyAttempts": "Troppi tentativi. Riprova tra qualche minuto."
 		}
 	},
 	"dashboard": {
