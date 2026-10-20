@@ -39,8 +39,8 @@
 	</div>
 
 	<section class="profile-import" aria-labelledby="profile-import-title">
-		<h2 class="profile-import-title" id="profile-import-title">{t('import.title')}</h2>
-		<p class="profile-import-text">{t('profile.import.text')}</p>
+		<h2 class="profile-import-title" id="profile-import-title">{t('profile.import.title')}</h2>
+		<p class="profile-import-text">{t('profile.import.textAll')}</p>
 		<a class="button button-secondary" href={resolve('/dashboard/profile/import')}>
 			{t('profile.import.open')}
 		</a>

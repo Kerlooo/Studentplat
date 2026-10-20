@@ -68,7 +68,7 @@
 				<a class="button button-primary" href={resolve('/dashboard/calendar')}>
 					{t('transcript.empty.calendar')}
 				</a>
-				<a class="button button-secondary" href={resolve('/dashboard/profile/import')}>
+				<a class="button button-secondary" href={resolve('/dashboard/profile/import?tab=passed')}>
 					{t('transcript.empty.import')}
 				</a>
 			</div>

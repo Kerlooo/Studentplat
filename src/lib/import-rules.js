@@ -9,3 +9,11 @@ export const IMPORT_EXAMPLE = `[
   { "name": "Fisica", "cfu": 6, "date": "2025-07-01", "grade": 24, "rejected": true, "notes": "rifiutato" },
   { "name": "Chimica", "cfu": 6, "date": "2025-01-15", "grade": null }
 ]`;
+
+/** Esempio del formato degli esami da sostenere. */
+export const IMPORT_PLANNED_EXAMPLE = `[
+  { "name": "Analisi matematica II", "cfu": 9, "date": "2026-02-12", "teacher": "Lucia Bianchi", "difficulty": "hard" },
+  { "name": "Basi di dati", "cfu": 9, "date": "2026-01-28" },
+  { "name": "Sistemi operativi", "cfu": 12, "difficulty": "medium" },
+  { "name": "Lingua inglese B2", "cfu": 3, "date": null }
+]`;

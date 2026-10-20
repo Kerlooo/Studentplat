@@ -417,6 +417,43 @@ export async function setDifficulty(userId, userExamId, difficulty) {
 /** @typedef {{ row: number, key: string, params?: Record<string, string | number> }} ImportError */
 
 /**
+ * Cerca un esame nel catalogo (confronto della collation: maiuscole e accenti non contano)
+ * e lo crea se manca, a nome dell'utente. Da usare dentro una transazione.
+ * @param {import('mysql2/promise').PoolConnection} conn
+ * @param {number} userId
+ * @param {string} name nome gia' normalizzato
+ * @param {number} cfu
+ * @returns {Promise<{ id: number, created: boolean }>}
+ */
+async function findOrCreateExam(conn, userId, name, cfu) {
+	const find = async () => {
+		const [rows] = /** @type {[Rows, unknown]} */ (
+			await conn.execute('SELECT id FROM exams WHERE name = ? AND cfu = ?', [name, cfu])
+		);
+		return /** @type {number | undefined} */ (rows[0]?.id);
+	};
+
+	const id = await find();
+	if (id) return { id, created: false };
+	try {
+		const [result] = /** @type {[Result, unknown]} */ (
+			await conn.execute('INSERT INTO exams (name, cfu, created_by) VALUES (?, ?, ?)', [
+				name,
+				cfu,
+				userId
+			])
+		);
+		return { id: result.insertId, created: true };
+	} catch (err) {
+		// Creato nel frattempo da un'altra richiesta
+		if (/** @type {{ code?: string }} */ (err).code !== 'ER_DUP_ENTRY') throw err;
+		const existing = await find();
+		if (!existing) throw err;
+		return { id: existing, created: false };
+	}
+}
+
+/**
  * Importa i tentativi in un'unica transazione: catalogo e libretto vengono creati o riusati,
  * i duplicati esatti (stesso esame, data e voto) saltati. Se un tentativo superato
  * entra in conflitto con un altro (gia' salvato o nello stesso elenco) non si scrive nulla.
@@ -454,32 +491,9 @@ export async function importAttempts(userId, entries) {
 		for (const group of groups.values()) {
 			const { name, cfu } = group[0];
 
-			// Catalogo: confronto della collation (maiuscole e accenti non contano)
-			let [found] = /** @type {[Rows, unknown]} */ (
-				await conn.execute('SELECT id FROM exams WHERE name = ? AND cfu = ?', [name, cfu])
-			);
-			let examId = found[0]?.id;
-			if (!examId) {
-				try {
-					const [result] = /** @type {[Result, unknown]} */ (
-						await conn.execute('INSERT INTO exams (name, cfu, created_by) VALUES (?, ?, ?)', [
-							name,
-							cfu,
-							userId
-						])
-					);
-					examId = result.insertId;
-					newExams++;
-				} catch (err) {
-					// Creato nel frattempo da un'altra richiesta
-					if (/** @type {{ code?: string }} */ (err).code !== 'ER_DUP_ENTRY') throw err;
-					[found] = /** @type {[Rows, unknown]} */ (
-						await conn.execute('SELECT id FROM exams WHERE name = ? AND cfu = ?', [name, cfu])
-					);
-					examId = found[0]?.id;
-					if (!examId) throw err;
-				}
-			}
+			const exam = await findOrCreateExam(conn, userId, name, cfu);
+			const examId = exam.id;
+			if (exam.created) newExams++;
 
 			// Libretto: la riga viene bloccata come in addAttempt
 			await conn.execute(
@@ -570,6 +584,73 @@ export async function importAttempts(userId, entries) {
 
 		await conn.commit();
 		return { ok: true, attempts: inserts.length, newExams, duplicates };
+	} catch (err) {
+		await conn.rollback();
+		throw err;
+	} finally {
+		conn.release();
+	}
+}
+
+/**
+ * Esame da sostenere gia' validato (vedi `parsePlannedImport`); `row` parte da 1.
+ * @typedef {{
+ * 	row: number,
+ * 	name: string,
+ * 	cfu: number,
+ * 	date: string | null,
+ * 	teacher: string | null,
+ * 	difficulty: Difficulty | null,
+ * }} PlannedImportEntry
+ */
+
+/**
+ * Aggiunge al libretto dell'utente gli esami da sostenere, in un'unica transazione:
+ * il catalogo viene creato o riusato; gli esami gia' nel libretto vengono saltati
+ * senza modificarli (appello, docente e difficolta' restano quelli salvati).
+ * @param {number} userId
+ * @param {PlannedImportEntry[]} entries senza doppioni (garantito da `parsePlannedImport`)
+ * @returns {Promise<{ added: number, newExams: number, existing: number }>}
+ */
+export async function importPlannedExams(userId, entries) {
+	const conn = await db.getConnection();
+	try {
+		await conn.beginTransaction();
+		let added = 0;
+		let newExams = 0;
+		let existing = 0;
+
+		for (const entry of entries) {
+			const exam = await findOrCreateExam(conn, userId, entry.name, entry.cfu);
+			if (exam.created) newExams++;
+
+			const [found] = /** @type {[Rows, unknown]} */ (
+				await conn.execute(
+					'SELECT id FROM user_exams WHERE user_id = ? AND exam_id = ? FOR UPDATE',
+					[userId, exam.id]
+				)
+			);
+			if (found.length > 0) {
+				existing++;
+				continue;
+			}
+			try {
+				await conn.execute(
+					`INSERT INTO user_exams (user_id, exam_id, planned_date, teacher, difficulty)
+					 VALUES (?, ?, ?, ?, ?)`,
+					[userId, exam.id, entry.date, entry.teacher, entry.difficulty]
+				);
+				added++;
+			} catch (err) {
+				// Aggiunto nel frattempo da un'altra richiesta, o due righe che il database
+				// considera lo stesso esame: resta la riga gia' presente
+				if (/** @type {{ code?: string }} */ (err).code !== 'ER_DUP_ENTRY') throw err;
+				existing++;
+			}
+		}
+
+		await conn.commit();
+		return { added, newExams, existing };
 	} catch (err) {
 		await conn.rollback();
 		throw err;

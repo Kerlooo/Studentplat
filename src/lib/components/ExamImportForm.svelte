@@ -2,23 +2,58 @@
 	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { getT } from '#lib/i18n/context.js';
-	import { IMPORT_EXAMPLE } from '#lib/import-rules.js';
+	import { IMPORT_EXAMPLE, IMPORT_PLANNED_EXAMPLE } from '#lib/import-rules.js';
 	import { EXAM_CFU_MAX, EXAM_CFU_MIN, EXAM_NAME_MAX } from '#lib/exam-rules.js';
 	import { NOTES_MAX, TEACHER_MAX } from '#lib/grade-rules.js';
 
 	/**
-	 * Importazione degli esami sostenuti da un elenco JSON (action di default di
-	 * /dashboard/profile/import; titolo e limiti li mostra la pagina).
+	 * Importazione di esami da un elenco JSON (action `passed` o `planned` di
+	 * /dashboard/profile/import, secondo `kind`; titolo e limiti li mostra la pagina).
 	 * In caso di errori non viene salvato nulla: il testo resta nel campo e sotto
 	 * compare l'elenco degli errori per riga (riga 0 = errore sull'intero testo).
 	 *
 	 * @type {{
+	 * 	kind?: 'passed' | 'planned',
 	 * 	initialText?: string,
 	 * 	errors?: { row: number, key: string, params?: import('#lib/i18n/index.js').TranslateParams }[],
-	 * 	result?: { attempts: number, newExams: number, duplicates: number } | null,
+	 * 	result?: import('#lib/i18n/index.js').TranslateParams | null,
 	 * }}
 	 */
-	let { initialText = '', errors = [], result = null } = $props();
+	let { kind = 'passed', initialText = '', errors = [], result = null } = $props();
+
+	/**
+	 * Per ogni tipo d'importazione: campi del formato (nome e chiave della descrizione),
+	 * esempio e testi del pulsante e dell'esito.
+	 */
+	const KINDS = {
+		passed: {
+			fields: [
+				['name', 'import.fields.name'],
+				['cfu', 'import.fields.cfu'],
+				['date', 'import.fields.date'],
+				['grade', 'import.fields.grade'],
+				['rejected', 'import.fields.rejected'],
+				['teacher', 'import.fields.teacher'],
+				['difficulty', 'import.fields.difficulty'],
+				['notes', 'import.fields.notes']
+			],
+			example: IMPORT_EXAMPLE,
+			submit: 'import.submit',
+			success: 'import.success'
+		},
+		planned: {
+			fields: [
+				['name', 'import.fields.name'],
+				['cfu', 'import.fields.cfu'],
+				['date', 'import.planned.fields.date'],
+				['teacher', 'import.fields.teacher'],
+				['difficulty', 'import.fields.difficulty']
+			],
+			example: IMPORT_PLANNED_EXAMPLE,
+			submit: 'import.planned.submit',
+			success: 'import.planned.success'
+		}
+	};
 
 	const t = getT();
 	const fieldParams = {
@@ -28,6 +63,10 @@
 		teacherMax: TEACHER_MAX,
 		notesMax: NOTES_MAX
 	};
+
+	let config = $derived(KINDS[kind]);
+	let inputId = $derived(`exam-import-json-${kind}`);
+	let errorsId = $derived(`exam-import-errors-${kind}`);
 
 	// Testo copiato una volta dal server (invio senza JavaScript), poi lo gestisce il campo
 	// svelte-ignore state_referenced_locally
@@ -43,7 +82,7 @@
 
 	async function copyExample() {
 		try {
-			await navigator.clipboard.writeText(IMPORT_EXAMPLE);
+			await navigator.clipboard.writeText(config.example);
 			copied = true;
 		} catch {
 			copied = false;
@@ -55,25 +94,14 @@
 		const message = t(error.key, error.params);
 		return error.row > 0 ? t('import.errors.row', { row: error.row, message }) : message;
 	};
-
-	const fields = /** @type {const} */ ([
-		'name',
-		'cfu',
-		'date',
-		'grade',
-		'rejected',
-		'teacher',
-		'difficulty',
-		'notes'
-	]);
 </script>
 
 <div class="exam-import">
 	<dl class="exam-import-fields">
-		{#each fields as field (field)}
+		{#each config.fields as [field, key] (field)}
 			<div class="exam-import-field">
 				<dt><code>{field}</code></dt>
-				<dd>{t(`import.fields.${field}`, fieldParams)}</dd>
+				<dd>{t(key, fieldParams)}</dd>
 			</div>
 		{/each}
 	</dl>
@@ -81,7 +109,7 @@
 	<figure class="exam-import-example">
 		<figcaption class="exam-import-example-caption">{t('import.example')}</figcaption>
 		<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-		<pre class="exam-import-example-code" tabindex="0"><code>{IMPORT_EXAMPLE}</code></pre>
+		<pre class="exam-import-example-code" tabindex="0"><code>{config.example}</code></pre>
 		{#if canCopy}
 			<div class="exam-import-copy">
 				<button class="button button-secondary" type="button" onclick={copyExample}>
@@ -95,6 +123,7 @@
 	<form
 		class="exam-import-form"
 		method="POST"
+		action="?/{kind}"
 		use:enhance={() => {
 			pending = true;
 			copied = false;
@@ -106,21 +135,21 @@
 		}}
 	>
 		<div class="exam-import-input">
-			<label class="exam-import-label" for="exam-import-json">{t('import.label')}</label>
+			<label class="exam-import-label" for={inputId}>{t('import.label')}</label>
 			<textarea
 				class="exam-import-textarea"
-				id="exam-import-json"
+				id={inputId}
 				name="json"
 				rows="12"
 				spellcheck="false"
 				autocomplete="off"
 				aria-invalid={errors.length > 0 ? 'true' : undefined}
-				aria-describedby={errors.length > 0 ? 'exam-import-errors' : undefined}
+				aria-describedby={errors.length > 0 ? errorsId : undefined}
 				bind:value={text}></textarea>
 		</div>
 
 		{#if errors.length > 0 && !pending}
-			<div class="exam-import-errors form-error" id="exam-import-errors" role="alert">
+			<div class="exam-import-errors form-error" id={errorsId} role="alert">
 				<p>{t('import.errors.title', { count: errors.length })}</p>
 				<ul class="exam-import-error-list">
 					{#each errors as error, i (i)}
@@ -132,10 +161,10 @@
 
 		<div class="exam-import-actions">
 			<button class="button button-primary" type="submit" disabled={pending || !text.trim()}>
-				{t('import.submit')}
+				{t(config.submit)}
 			</button>
 			<p class="exam-import-status" role="status">
-				{#if result && !pending}{t('import.success', result)}{/if}
+				{#if result && !pending}{t(config.success, result)}{/if}
 			</p>
 		</div>
 	</form>

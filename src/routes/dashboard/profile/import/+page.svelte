@@ -1,14 +1,37 @@
 <script>
+	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import { getT } from '#lib/i18n/context.js';
 	import { IMPORT_MAX_BYTES, IMPORT_MAX_ITEMS } from '#lib/import-rules.js';
 	import ExamImportForm from '#lib/components/ExamImportForm.svelte';
+	import TabNav from '#lib/components/TabNav.svelte';
 
 	/** @type {import('./$types').PageProps} */
 	let { form } = $props();
 
 	const t = getT();
 	const limits = { items: IMPORT_MAX_ITEMS, size: IMPORT_MAX_BYTES / 1024 };
+
+	/** Scheda attiva: quella dell'ultimo invio, altrimenti `?tab=`, altrimenti esami sostenuti. */
+	let tab = $derived(
+		form?.form ?? (page.url.searchParams.get('tab') === 'planned' ? 'planned' : 'passed')
+	);
+
+	let tabs = $derived([
+		{
+			id: 'passed',
+			href: resolve('/dashboard/profile/import?tab=passed'),
+			label: t('import.tabs.passed')
+		},
+		{
+			id: 'planned',
+			href: resolve('/dashboard/profile/import?tab=planned'),
+			label: t('import.tabs.planned')
+		}
+	]);
+
+	// L'esito e gli errori valgono solo per la scheda del form inviato
+	let sent = $derived(form?.form === tab ? form : null);
 </script>
 
 <svelte:head>
@@ -18,16 +41,25 @@
 <section class="import-page">
 	<header class="import-header">
 		<a class="import-back" href={resolve('/dashboard/profile')}>{t('import.back')}</a>
-		<h1 class="import-title">{t('import.title')}</h1>
-		<p class="import-intro">{t('import.intro', limits)}</p>
+		<h1 class="import-title">
+			{tab === 'planned' ? t('import.planned.title') : t('import.title')}
+		</h1>
+		<p class="import-intro">
+			{tab === 'planned' ? t('import.planned.intro', limits) : t('import.intro', limits)}
+		</p>
 	</header>
 
 	<div class="import-panel">
-		<ExamImportForm
-			initialText={form?.importText ?? ''}
-			errors={form?.importErrors ?? []}
-			result={form?.imported ?? null}
-		/>
+		<TabNav label={t('import.tabs.label')} {tabs} current={tab} />
+
+		{#key tab}
+			<ExamImportForm
+				kind={tab}
+				initialText={sent?.importText ?? ''}
+				errors={sent?.importErrors ?? []}
+				result={sent?.imported ?? null}
+			/>
+		{/key}
 	</div>
 </section>
 
@@ -73,6 +105,9 @@
 	 */
 	.import-panel {
 		--margin-x: var(--space-4);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
 		width: 100%;
 		max-width: 36rem;
 		min-width: 0;

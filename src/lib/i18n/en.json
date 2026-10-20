@@ -188,8 +188,9 @@
 			"totalCfuInvalid": "Please enter a whole number of credits between {min} and {max}."
 		},
 		"import": {
-			"text": "Already taken some exams? Add them all at once by pasting a JSON list.",
-			"open": "Go to import"
+			"open": "Go to import",
+			"title": "Import exams",
+			"textAll": "Add many exams at once by pasting a JSON list, either the ones you've already taken or the ones still ahead of you."
 		}
 	},
 	"modal": {
@@ -454,9 +455,24 @@
 			"passedTwice": "{name} is also marked as passed in row {other}",
 			"alreadyPassed": "{name} is already marked as passed in your transcript",
 			"generic": "Couldn't import. Please try again.",
-			"difficultyInvalid": "difficulty must be \"easy\", \"medium\", \"hard\" or null"
+			"difficultyInvalid": "difficulty must be \"easy\", \"medium\", \"hard\" or null",
+			"duplicateRow": "this exam already appears in row {other}"
 		},
-		"back": "Back to profile"
+		"back": "Back to profile",
+		"tabs": {
+			"label": "Type of exams to import",
+			"passed": "Past exams",
+			"planned": "Upcoming exams"
+		},
+		"planned": {
+			"title": "Import upcoming exams",
+			"intro": "Paste a JSON list of the exams you still have to take, up to {items} items and {size} KB: they will be added to your transcript, with the planned exam date if you give one. If any item has an error, nothing is saved.",
+			"fields": {
+				"date": "optional, planned exam date in YYYY-MM-DD format, or null"
+			},
+			"submit": "Add to transcript",
+			"success": "Exams added to your transcript: {added}. New exams in the catalogue: {newExams}. Already in your transcript and left unchanged: {existing}."
+		}
 	},
 	"admin": {
 		"meta": {
