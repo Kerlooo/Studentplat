@@ -1,0 +1,32 @@
+name: Proposta di funzionalità / Feature request
+description: Un'idea per migliorare Studentplat. / An idea to improve Studentplat.
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema / Problem
+      description: Che cosa ti manca o ti complica la vita, oggi? / What is missing or getting in your way today?
+      placeholder: Quando preparo la sessione non vedo quanti CFU... / When I plan my exam session I can't see how many credits...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Soluzione proposta / Proposed solution
+      description: Come immagini che funzioni. / How you picture it working.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative considerate / Alternatives considered
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contributo / Contribution
+      options:
+        - label: Posso lavorarci io con una pull request / I can work on it with a pull request

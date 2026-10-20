@@ -17,7 +17,8 @@ Registra gli esami sostenuti e quelli che ti aspettano: Studentplat calcola la m
 [Installazione](#installazione) •
 [Import degli esami](#import-degli-esami) •
 [Sicurezza](#sicurezza) •
-[Sviluppo](#sviluppo)
+[Sviluppo](#sviluppo) •
+[Contribuire](#contribuire)
 
 <img src="media/home.png" alt="Homepage di Studentplat con un esempio di libretto: tre esami, media aritmetica 27,33 e ponderata 27,67" width="100%">
 
@@ -154,6 +155,10 @@ src/
 ### Lingue
 
 L'italiano è la lingua sorgente. I testi visibili non sono scritti nei componenti ma in `src/lib/i18n/it.json` ed `en.json`, con le stesse chiavi, e si usano tramite `getT()`. Una nuova chiave va aggiunta in entrambi i file.
+
+## Contribuire
+
+Segnalazioni, idee e pull request sono benvenute: le regole sono in [CONTRIBUTING.md](CONTRIBUTING.md) e chi partecipa accetta il [codice di condotta](CODE_OF_CONDUCT.md). Le vulnerabilità vanno segnalate in privato, come spiegato in [SECURITY.md](SECURITY.md).
 
 ## Autore
 

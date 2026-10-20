@@ -17,7 +17,8 @@ Log the exams you have passed and the ones still ahead: Studentplat works out yo
 [Install](#install) •
 [Importing exams](#importing-exams) •
 [Security](#security) •
-[Development](#development)
+[Development](#development) •
+[Contributing](#contributing)
 
 <img src="media/home.png" alt="Studentplat homepage with a sample transcript: three exams, arithmetic average 27.33 and weighted average 27.67" width="100%">
 
@@ -154,6 +155,10 @@ src/
 ### Languages
 
 Italian is the source language. Visible text is not written in components but in `src/lib/i18n/it.json` and `en.json`, with the same keys, used through `getT()`. A new key goes into both files.
+
+## Contributing
+
+Bug reports, ideas and pull requests are welcome: the rules are in [CONTRIBUTING.md](CONTRIBUTING.md#contributing-to-studentplat-english) and participants agree to the [code of conduct](CODE_OF_CONDUCT.md#code-of-conduct-english). Vulnerabilities must be reported privately, as described in [SECURITY.md](SECURITY.md#security-policy-english).
 
 ## Author
 

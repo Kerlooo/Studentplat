@@ -1,0 +1,73 @@
+name: Segnalazione bug / Bug report
+description: Qualcosa non funziona come dovrebbe. / Something does not work as expected.
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Grazie per la segnalazione! Per una vulnerabilità di sicurezza non usare questo modulo: segui la [politica di sicurezza](https://github.com/Kerlooo/Studentplat/security/policy).
+        Thanks for the report! For a security vulnerability do not use this form: follow the [security policy](https://github.com/Kerlooo/Studentplat/security/policy).
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Parte del sito / Area
+      options:
+        - Homepage
+        - Accesso e registrazione / Login and sign up
+        - Panoramica / Overview
+        - Calendario / Calendar
+        - Libretto / Transcript
+        - Statistiche / Statistics
+        - Profilo e import / Profile and import
+        - Pannello admin / Admin panel
+        - Lingua o tema / Language or theme
+        - Altro / Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Cosa succede / What happens
+      description: Descrivi il problema. / Describe the problem.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passi per riprodurlo / Steps to reproduce
+      placeholder: |
+        1. Vai su / Go to '/dashboard/calendar'
+        2. Clicca su / Click on '...'
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Cosa ti aspettavi / Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshot o log / Screenshots or logs
+      description: Facoltativo. Errori nella console del browser o nel terminale del server. / Optional. Errors from the browser console or the server terminal.
+      render: text
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser e sistema / Browser and OS
+      placeholder: Firefox 131, Linux
+
+  - type: input
+    id: commit
+    attributes:
+      label: Versione / Version
+      description: Commit in uso (`git rev-parse --short HEAD`). / Commit in use.
+      placeholder: 3f6cdf9
