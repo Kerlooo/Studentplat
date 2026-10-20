@@ -10,6 +10,7 @@ Log the exams you have passed and the ones still ahead: Studentplat works out yo
 [![SvelteKit 3](https://img.shields.io/badge/sveltekit-3-FF3E00?logo=svelte&logoColor=white)](https://svelte.dev/docs/kit)
 [![MariaDB / MySQL](https://img.shields.io/badge/database-MariaDB%20%2F%20MySQL-003545?logo=mariadb&logoColor=white)](https://mariadb.org)
 [![Node.js 22+](https://img.shields.io/badge/node-22%2B-5FA04E?logo=nodedotjs&logoColor=white)](https://nodejs.org)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](../LICENSE)
 [![Languages: IT / EN](https://img.shields.io/badge/languages-IT%20%2F%20EN-1E3A8A)](#languages)
 
 [Versione italiana](README.md) •
@@ -160,6 +161,10 @@ Italian is the source language. Visible text is not written in components but in
 
 Bug reports, ideas and pull requests are welcome: the rules are in [CONTRIBUTING.md](CONTRIBUTING.md#contributing-to-studentplat-english) and participants agree to the [code of conduct](CODE_OF_CONDUCT.md#code-of-conduct-english). Vulnerabilities must be reported privately, as described in [SECURITY.md](SECURITY.md#security-policy-english).
 
+## License
+
+[MIT](../LICENSE): you are free to use, modify and redistribute the project, as long as the author credit is kept.
+
 ## Author
 
-Made by Carlo, a Computer Science and Technology student. Bug reports and suggestions are welcome in the [issues](https://github.com/Kerlooo/Studentplat/issues).
+Made by Kerlo (Carlo), a Computer Science and Technology student. Bug reports and suggestions are welcome in the [issues](https://github.com/Kerlooo/Studentplat/issues).

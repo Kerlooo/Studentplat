@@ -10,6 +10,7 @@ Registra gli esami sostenuti e quelli che ti aspettano: Studentplat calcola la m
 [![SvelteKit 3](https://img.shields.io/badge/sveltekit-3-FF3E00?logo=svelte&logoColor=white)](https://svelte.dev/docs/kit)
 [![MariaDB / MySQL](https://img.shields.io/badge/database-MariaDB%20%2F%20MySQL-003545?logo=mariadb&logoColor=white)](https://mariadb.org)
 [![Node.js 22+](https://img.shields.io/badge/node-22%2B-5FA04E?logo=nodedotjs&logoColor=white)](https://nodejs.org)
+[![Licenza: MIT](https://img.shields.io/badge/licenza-MIT-green.svg)](../LICENSE)
 [![Lingue: IT / EN](https://img.shields.io/badge/lingue-IT%20%2F%20EN-1E3A8A)](#lingue)
 
 [English version](README.en.md) •
@@ -160,6 +161,10 @@ L'italiano è la lingua sorgente. I testi visibili non sono scritti nei componen
 
 Segnalazioni, idee e pull request sono benvenute: le regole sono in [CONTRIBUTING.md](CONTRIBUTING.md) e chi partecipa accetta il [codice di condotta](CODE_OF_CONDUCT.md). Le vulnerabilità vanno segnalate in privato, come spiegato in [SECURITY.md](SECURITY.md).
 
+## Licenza
+
+[MIT](../LICENSE): puoi usare, modificare e ridistribuire il progetto liberamente, mantenendo l'indicazione dell'autore.
+
 ## Autore
 
-Realizzato da Carlo, studente di Scienze e Tecnologie Informatiche. Segnalazioni e suggerimenti sono benvenuti nelle [issue](https://github.com/Kerlooo/Studentplat/issues).
+Realizzato da Kerlo (Carlo), studente di Scienze e Tecnologie Informatiche. Segnalazioni e suggerimenti sono benvenuti nelle [issue](https://github.com/Kerlooo/Studentplat/issues).
