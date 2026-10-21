@@ -1,8 +1,10 @@
+import { building } from '$app/env';
 import { DEFAULT_LANG, isLang } from '#lib/i18n/index.js';
 import {
 	SESSION_COOKIE,
 	deleteSessionCookie,
 	setSessionCookie,
+	startSessionCleanup,
 	validateSession
 } from '#lib/server/auth.js';
 
@@ -12,6 +14,12 @@ const SECURITY_HEADERS = {
 	'X-Frame-Options': 'DENY',
 	'Referrer-Policy': 'same-origin'
 };
+
+/** @type {import('@sveltejs/kit/hooks').ServerInit} */
+export function init() {
+	// durante la build SvelteKit esegue l'app per analizzarla: niente timer ne' accessi al DB
+	if (!building) startSessionCleanup();
+}
 
 /** @type {import('@sveltejs/kit/hooks').Handle} */
 export async function handle({ event, resolve }) {

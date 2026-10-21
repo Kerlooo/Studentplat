@@ -81,3 +81,7 @@ ALTER TABLE users
 -- Difficolta' personale dell'esame del libretto (NULL = non indicata)
 ALTER TABLE user_exams
 	ADD COLUMN IF NOT EXISTS difficulty ENUM('easy','medium','hard') NULL AFTER teacher;
+
+-- Pulizia periodica delle sessioni scadute (startSessionCleanup): indice sulla scadenza
+ALTER TABLE sessions
+	ADD INDEX IF NOT EXISTS idx_sessions_expires (expires_at);

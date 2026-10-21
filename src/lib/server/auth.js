@@ -106,6 +106,37 @@ export async function validateSession(token) {
 	};
 }
 
+/**
+ * Elimina le sessioni scadute. validateSession cancella solo quella del token che riceve:
+ * le sessioni mai piu' usate (cookie cancellato, browser chiuso) restano finche' non passa questa.
+ * @returns {Promise<number>} sessioni eliminate
+ */
+export async function deleteExpiredSessions() {
+	const [result] = /** @type {[import('mysql2').ResultSetHeader, unknown]} */ (
+		await db.execute('DELETE FROM sessions WHERE expires_at <= ?', [new Date()])
+	);
+	return result.affectedRows;
+}
+
+const SESSION_CLEANUP_INTERVAL_MS = 60 * 60 * 1000;
+
+/** @type {ReturnType<typeof setInterval> | undefined} */
+let sessionCleanupTimer;
+
+/**
+ * Avvia la pulizia periodica delle sessioni scadute (subito e poi ogni ora).
+ * Idempotente: in dev il modulo degli hook puo' essere rivalutato.
+ * Il timer non tiene in vita il processo (unref).
+ */
+export function startSessionCleanup() {
+	if (sessionCleanupTimer) return;
+	const run = () =>
+		deleteExpiredSessions().catch((err) => console.error('Pulizia sessioni fallita', err));
+	run();
+	sessionCleanupTimer = setInterval(run, SESSION_CLEANUP_INTERVAL_MS);
+	sessionCleanupTimer.unref();
+}
+
 /** @param {string} token */
 export async function invalidateSession(token) {
 	await db.execute('DELETE FROM sessions WHERE id = ?', [hashToken(token)]);
