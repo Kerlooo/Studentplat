@@ -89,7 +89,8 @@
 			"text": "La registrazione è gratuita e i tuoi voti li vedi solo tu.",
 			"register": "Registrati",
 			"login": "Accedi"
-		}
+		},
+		"accountDeleted": "Il tuo account è stato eliminato."
 	},
 	"auth": {
 		"tagline": "Tieni traccia di esami, giorni di studio, voti e media in un unico posto.",
@@ -192,6 +193,27 @@
 			"open": "Vai all'importazione",
 			"title": "Importa esami",
 			"textAll": "Carica tutti insieme, incollando un elenco JSON, gli esami che hai già sostenuto oppure quelli che devi ancora sostenere."
+		},
+		"delete": {
+			"title": "Elimina account",
+			"text": "Cancella il tuo account e tutti i tuoi dati da Studentplat. L'operazione non si può annullare.",
+			"submit": "Elimina account",
+			"question": "Eliminare definitivamente il tuo account?",
+			"detailTranscript": "Il libretto con tutti i tuoi esami.",
+			"detailAttempts": "Tutti i tentativi e i voti registrati.",
+			"detailCalendar": "Gli appelli segnati nel calendario.",
+			"detailProfile": "Il profilo, con corso di studi e università.",
+			"detailCatalog": "Gli esami che hai creato restano nel catalogo per gli altri studenti, senza il tuo nome.",
+			"password": "Password attuale",
+			"passwordHint": "Per sicurezza, inserisci la password con cui accedi.",
+			"confirm": "Sì, elimina il mio account",
+			"cancel": "Annulla",
+			"adminNote": "Sei un amministratore: non puoi eliminare il tuo account da qui. Chiedi a un altro amministratore di farlo dal pannello admin.",
+			"errors": {
+				"admin": "Un amministratore non può eliminare il proprio account.",
+				"passwordRequired": "Inserisci la tua password.",
+				"passwordWrong": "La password non è corretta."
+			}
 		}
 	},
 	"modal": {

@@ -214,31 +214,11 @@ export async function logoutUserEverywhere(userId) {
 }
 
 /**
- * Cancella l'utente: sessioni, libretto e tentativi spariscono per cascata,
+ * Cancella l'utente (stessa operazione dell'eliminazione dal profilo):
+ * sessioni, libretto e tentativi spariscono per cascata,
  * gli esami che aveva creato restano nel catalogo senza autore.
- * @param {number} userId
- * @returns {Promise<boolean>} false se l'utente non esiste
  */
-export async function deleteUser(userId) {
-	const conn = await db.getConnection();
-	try {
-		await conn.beginTransaction();
-		// Stesso ordine di lock di cancellazione e unione esami: prima exams, poi la cascata su user_exams
-		await conn.execute('SELECT id FROM exams WHERE created_by = ? ORDER BY id FOR UPDATE', [
-			userId
-		]);
-		const [result] = /** @type {[Result, unknown]} */ (
-			await conn.execute('DELETE FROM users WHERE id = ?', [userId])
-		);
-		await conn.commit();
-		return result.affectedRows > 0;
-	} catch (err) {
-		await conn.rollback();
-		throw err;
-	} finally {
-		conn.release();
-	}
-}
+export { deleteAccount as deleteUser } from './profile.js';
 
 /**
  * Esame del catalogo con chi l'ha creato e quanto e' usato.

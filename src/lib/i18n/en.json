@@ -89,7 +89,8 @@
 			"text": "Signing up is free, and only you can see your grades.",
 			"register": "Sign up",
 			"login": "Log in"
-		}
+		},
+		"accountDeleted": "Your account has been deleted."
 	},
 	"auth": {
 		"tagline": "Keep track of exams, study days, grades and averages in one place.",
@@ -192,6 +193,27 @@
 			"open": "Go to import",
 			"title": "Import exams",
 			"textAll": "Add many exams at once by pasting a JSON list, either the ones you've already taken or the ones still ahead of you."
+		},
+		"delete": {
+			"title": "Delete account",
+			"text": "Delete your account and all your data from Studentplat. This cannot be undone.",
+			"submit": "Delete account",
+			"question": "Permanently delete your account?",
+			"detailTranscript": "Your transcript with all your exams.",
+			"detailAttempts": "Every attempt and grade you recorded.",
+			"detailCalendar": "The exam dates in your calendar.",
+			"detailProfile": "Your profile, including degree course and university.",
+			"detailCatalog": "Exams you created stay in the catalog for other students, without your name.",
+			"password": "Current password",
+			"passwordHint": "For your security, enter the password you sign in with.",
+			"confirm": "Yes, delete my account",
+			"cancel": "Cancel",
+			"adminNote": "You are an administrator, so you cannot delete your account here. Ask another administrator to do it from the admin panel.",
+			"errors": {
+				"admin": "An administrator cannot delete their own account.",
+				"passwordRequired": "Enter your password.",
+				"passwordWrong": "The password is incorrect."
+			}
 		}
 	},
 	"modal": {

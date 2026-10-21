@@ -52,3 +52,43 @@ export async function updateProfile(userId, profile) {
 		]
 	);
 }
+
+/**
+ * Hash della password dell'utente, per riconfermarne l'identita' (null se non esiste).
+ * @param {number} userId
+ * @returns {Promise<string | null>}
+ */
+export async function getPasswordHash(userId) {
+	const [rows] = /** @type {[import('mysql2').RowDataPacket[], unknown]} */ (
+		await db.execute('SELECT password_hash FROM users WHERE id = ?', [userId])
+	);
+	return rows[0]?.password_hash ?? null;
+}
+
+/**
+ * Elimina l'account: sessioni, libretto e tentativi spariscono per cascata,
+ * gli esami che l'utente aveva creato restano nel catalogo senza autore.
+ * Usata sia dal profilo (eliminazione del proprio account) sia dal pannello admin.
+ * @param {number} userId
+ * @returns {Promise<boolean>} false se l'utente non esiste
+ */
+export async function deleteAccount(userId) {
+	const conn = await db.getConnection();
+	try {
+		await conn.beginTransaction();
+		// Stesso ordine di lock di cancellazione e unione esami: prima exams, poi la cascata su user_exams
+		await conn.execute('SELECT id FROM exams WHERE created_by = ? ORDER BY id FOR UPDATE', [
+			userId
+		]);
+		const [result] = /** @type {[import('mysql2').ResultSetHeader, unknown]} */ (
+			await conn.execute('DELETE FROM users WHERE id = ?', [userId])
+		);
+		await conn.commit();
+		return result.affectedRows > 0;
+	} catch (err) {
+		await conn.rollback();
+		throw err;
+	} finally {
+		conn.release();
+	}
+}

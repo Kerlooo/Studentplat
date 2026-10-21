@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { getT } from '#lib/i18n/context.js';
 	import ProfileForm from '#lib/components/ProfileForm.svelte';
+	import DeleteAccountForm from '#lib/components/DeleteAccountForm.svelte';
 
 	/** @type {import('./$types').PageProps} */
 	let { data, form } = $props();
@@ -18,6 +19,9 @@
 			totalCfu: data.profile.totalCfu == null ? '' : String(data.profile.totalCfu)
 		}
 	);
+
+	let confirmDelete = $derived(!!form && 'action' in form && form.action === 'confirmDelete');
+	let deleteErrors = $derived(form && 'deleteErrors' in form ? form.deleteErrors : undefined);
 </script>
 
 <svelte:head>
@@ -45,6 +49,13 @@
 			{t('profile.import.open')}
 		</a>
 	</section>
+
+	<DeleteAccountForm
+		cancelHref={resolve('/dashboard/profile')}
+		isAdmin={data.role === 'admin'}
+		confirming={confirmDelete}
+		errors={deleteErrors}
+	/>
 </section>
 
 <style>

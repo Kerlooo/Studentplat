@@ -3,6 +3,9 @@
 	import { getNumberFormat, getT } from '#lib/i18n/context.js';
 	import SiteFooter from '#lib/components/SiteFooter.svelte';
 
+	/** @type {import('./$types').PageProps} */
+	let { data } = $props();
+
 	const t = getT();
 
 	const registerHref = resolve('/login?tab=register');
@@ -36,6 +39,9 @@
 <div class="landing">
 	<section class="landing-hero" aria-labelledby="landing-hero-title">
 		<div class="landing-hero-text">
+			{#if data.accountDeleted}
+				<p class="landing-notice" role="status">{t('landing.accountDeleted')}</p>
+			{/if}
 			<h1 class="landing-hero-title" id="landing-hero-title">{t('landing.hero.title')}</h1>
 			<p class="landing-hero-lead">{t('landing.hero.lead')}</p>
 			<div class="landing-actions">
@@ -142,6 +148,16 @@
 	}
 
 	/* ---------- Hero ---------- */
+
+	/* Avviso dopo l'eliminazione dell'account, in testa all'hero: come le conferme del pannello */
+	.landing-notice {
+		max-width: 40rem;
+		padding: var(--space-3) var(--space-4);
+		border-left: 4px solid var(--color-ink);
+		border-radius: var(--radius-xs);
+		background: var(--color-ink-soft);
+		font-weight: var(--weight-semibold);
+	}
 
 	.landing-hero {
 		display: grid;
