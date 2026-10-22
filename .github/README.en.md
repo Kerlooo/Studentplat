@@ -55,8 +55,11 @@ cd Studentplat
 npm install
 cp .env.example .env              # database credentials
 mariadb -u <user> < db/schema.sql
+mariadb -u <user> < db/seed-admin.sql    # optional: admin@admin.com / admin
 npm run dev
 ```
+
+`db/seed-admin.sql` creates a test administrator account (`admin@admin.com`, password `admin`): change the password or delete the account before putting the site online.
 
 The site runs at http://localhost:5173. The schema creates the `studentplat` database and all tables, and can be run again without losing data.
 
@@ -140,6 +143,7 @@ Authentication is written without external libraries, using only `node:crypto`.
 
 ```
 db/schema.sql              database schema
+db/seed-admin.sql          test admin account
 src/
   hooks.server.js          session, language and security headers
   lib/
